@@ -1,3 +1,9 @@
+---
+title: Trigger Modes
+parent: Documentation
+nav_order: 3
+---
+
 # Trigger Modes
 
 Every effect supports three trigger modes that control **when** the animation plays.

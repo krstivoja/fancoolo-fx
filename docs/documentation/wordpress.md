@@ -1,3 +1,9 @@
+---
+title: WordPress & Gutenberg
+parent: Documentation
+nav_order: 7
+---
+
 # WordPress & Gutenberg Integration
 
 FX was designed with WordPress in mind. It uses CSS classes because Gutenberg's block editor only supports the "Additional CSS class(es)" field — no data attributes or inline styles.

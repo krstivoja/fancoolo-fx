@@ -1,0 +1,28 @@
+title: FX Animation SDK
+description: A lightweight, class-driven GSAP animation framework.
+remote_theme: just-the-docs/just-the-docs
+
+# Only process the documentation folder with Jekyll
+defaults:
+  - scope:
+      path: "documentation"
+    values:
+      layout: "default"
+
+# Exclude vendor and landing page from Jekyll processing
+exclude:
+  - vendor
+  - index.html
+
+color_scheme: dark
+
+aux_links:
+  "GitHub":
+    - "https://github.com/krstivoja/gsap-animations-template"
+  "Live Demo":
+    - "https://krstivoja.github.io/gsap-animations-template/"
+
+back_to_top: true
+back_to_top_text: "Back to top"
+
+footer_content: "FX Animation SDK &mdash; Built on <a href=\"https://gsap.com\">GSAP</a>"

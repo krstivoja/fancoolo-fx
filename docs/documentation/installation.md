@@ -1,3 +1,9 @@
+---
+title: Installation
+parent: Documentation
+nav_order: 1
+---
+
 # Installation
 
 ## Requirements

@@ -1,3 +1,9 @@
+---
+title: JavaScript API
+parent: Documentation
+nav_order: 6
+---
+
 # JavaScript API
 
 For most use cases, CSS classes are all you need. The JavaScript API is for compound sequences, dynamic content, or custom trigger logic that classes alone can't express.

@@ -1,3 +1,9 @@
+---
+title: Examples
+parent: Documentation
+nav_order: 8
+---
+
 # Examples & Recipes
 
 Practical patterns for common use cases.

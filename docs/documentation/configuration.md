@@ -1,3 +1,9 @@
+---
+title: Configuration
+parent: Documentation
+nav_order: 5
+---
+
 # Configuration
 
 FX has two global config options that control section-based triggering and automatic tag-based animation.

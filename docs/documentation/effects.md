@@ -1,3 +1,9 @@
+---
+title: Effects
+parent: Documentation
+nav_order: 2
+---
+
 # Effects Reference
 
 FX ships with 5 animation effects. Each can be triggered on page load (`-pl`), on scroll (`-st`), or automatically inside a section (bare class).

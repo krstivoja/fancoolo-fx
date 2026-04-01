@@ -1,3 +1,9 @@
+---
+title: Modifiers
+parent: Documentation
+nav_order: 4
+---
+
 # Modifier Classes
 
 Override animation timing on individual elements using modifier classes. No JavaScript or inline styles needed — add them alongside effect classes in the HTML.
