@@ -449,8 +449,6 @@
                 });
             });
         }
-    }
-
         // 5. fx-stagger-all-[selector] — target children, effect from sibling class
         //    Requires an effect class on the same element (e.g. fx-reveal-st).
         document.querySelectorAll('[class*="fx-stagger-all-"]').forEach(function (container) {
