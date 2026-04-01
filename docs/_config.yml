@@ -9,7 +9,7 @@ defaults:
     values:
       layout: "default"
 
-color_scheme: dark
+color_scheme: light
 
 aux_links:
   "GitHub":
