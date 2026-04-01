@@ -9,11 +9,6 @@ defaults:
     values:
       layout: "default"
 
-# Exclude vendor and landing page from Jekyll processing
-exclude:
-  - vendor
-  - index.html
-
 color_scheme: dark
 
 aux_links:
