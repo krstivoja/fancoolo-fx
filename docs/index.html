@@ -3,30 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FX Animation SDK — Examples</title>
+    <title>FX Animation SDK — Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --blue: #2843E2;
+            --blue-light: #E8ECFF;
+            --orange: #E8673C;
+            --orange-bg: #F0845C;
+            --cream: #F5F2ED;
+            --white: #FFFFFF;
+            --black: #1A1A1A;
+            --gray-600: #555;
+            --gray-400: #999;
+            --purple: #A855F7;
+            --code-bg: #1E293B;
+            --code-border: #334155;
+        }
+
+        html { scroll-behavior: smooth; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #f0f0f0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cream);
+            color: var(--black);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 960px;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 32px;
         }
 
-        /* ── Hero (page-load animations) ── */
+        /* ── Nav ── */
+
+        nav {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            background: var(--cream);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: -0.02em;
+            color: var(--black);
+        }
+
+        .nav-links { display: flex; gap: 32px; }
+
+        .nav-links a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            text-decoration: none;
+        }
+
+        .nav-links a:hover { color: var(--black); }
+
+        .nav-badge {
+            background: var(--blue);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* ── Hero ── */
 
         .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 100px 0 80px;
             position: relative;
             overflow: hidden;
         }
@@ -34,72 +95,196 @@
         .hero-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: var(--blue);
+            border-radius: 0 0 40px 40px;
             z-index: 0;
         }
 
         .hero .container { position: relative; z-index: 1; }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #a0a0b0;
-            max-width: 540px;
-            margin-bottom: 32px;
-        }
-
-        .badge {
+        .hero-label {
             display: inline-block;
-            background: #e94560;
+            background: rgba(255,255,255,0.15);
             color: #fff;
             padding: 6px 16px;
             border-radius: 999px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             margin-bottom: 24px;
         }
 
-        /* ── Sections (scroll-triggered) ── */
+        .hero h1 {
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            color: #fff;
+            margin-bottom: 20px;
+        }
 
-        section {
-            padding: 120px 0;
+        .hero p {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.75);
+            max-width: 520px;
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-badges .tag {
+            background: var(--orange);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── Sections ── */
+
+        .demo-section {
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .demo-section:last-of-type { border-bottom: none; }
+
+        .section-header {
+            margin-bottom: 48px;
         }
 
         .section-label {
-            font-size: 0.75rem;
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.12em;
-            color: #e94560;
-            margin-bottom: 12px;
-        }
-
-        section h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 700;
+            color: var(--blue);
+            background: var(--blue-light);
+            padding: 4px 12px;
+            border-radius: 4px;
             margin-bottom: 16px;
         }
 
-        section p {
-            font-size: 1.1rem;
-            color: #a0a0b0;
-            max-width: 640px;
+        .demo-section h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 12px;
         }
+
+        .demo-section .desc {
+            font-size: 1.05rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        /* ── Preview + Code split ── */
+
+        .demo-split {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+
+        .demo-preview {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 48px 40px;
+            border: 1px solid rgba(0,0,0,0.06);
+            overflow: hidden;
+        }
+
+        .demo-preview h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 12px;
+        }
+
+        .demo-preview p {
+            font-size: 1rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        /* ── Code blocks ── */
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--code-border);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--code-border);
+        }
+
+        .code-header span {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #334155;
+        }
+
+        .code-body {
+            padding: 20px 24px;
+            overflow-x: auto;
+        }
+
+        .code-body pre {
+            margin: 0;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: #E2E8F0;
+        }
+
+        .code-body .tag { color: #7DD3FC; }
+        .code-body .attr { color: #C4B5FD; }
+        .code-body .val { color: #86EFAC; }
+        .code-body .comment { color: #64748B; }
+        .code-body .keyword { color: #F472B6; }
+        .code-body .str { color: #FDE68A; }
 
         /* ── Image grid ── */
 
         .image-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-            margin-top: 48px;
+            gap: 16px;
+            margin-top: 32px;
         }
 
         .image-grid img {
@@ -110,180 +295,627 @@
             display: block;
         }
 
-        /* ── Card ── */
+        /* ── Badges ── */
+
+        .badge-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge--blue { background: var(--blue); }
+        .badge--orange { background: var(--orange); }
+        .badge--purple { background: var(--purple); }
+
+        /* ── Glass card ── */
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--blue);
             border-radius: 20px;
             padding: 48px;
-            margin-top: 48px;
+            margin-top: 32px;
             text-align: center;
+            color: #fff;
         }
 
         .glass-card h3 {
             font-size: 1.5rem;
-            margin-bottom: 12px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #fff;
         }
 
-        .glass-card p { margin: 0 auto; }
+        .glass-card p {
+            color: rgba(255,255,255,0.75);
+            margin: 0 auto;
+        }
 
-        /* ── Custom timing override demo ── */
+        /* ── Orange section ── */
 
-        /* No extra CSS needed — overrides use modifier classes like fx-duration-[2] */
+        .section--orange {
+            background: var(--orange-bg);
+            border-radius: 24px;
+            margin: 0 32px;
+            padding: 80px 0;
+            border-bottom: none;
+        }
 
-        /* ── Footer spacer ── */
+        .section--orange h2,
+        .section--orange .desc { color: #fff; }
+
+        .section--orange .section-label {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .section--orange .demo-preview {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.15);
+        }
+
+        .section--orange .demo-preview h3,
+        .section--orange .demo-preview p { color: #fff; }
+
+        /* ── Config section ── */
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .config-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .config-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .config-card p {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        .config-card code {
+            font-size: 0.8rem;
+            background: var(--blue-light);
+            color: var(--blue);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* ── Install section ── */
+
+        .install-bar {
+            background: var(--code-bg);
+            border-radius: 12px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 24px;
+            border: 1px solid var(--code-border);
+        }
+
+        .install-bar span {
+            color: #64748B;
+            font-family: monospace;
+        }
+
+        .install-bar code {
+            color: #E2E8F0;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        /* ── Footer ── */
 
         footer {
-            padding: 80px 0;
+            padding: 60px 0;
             text-align: center;
-            color: #555;
+            color: var(--gray-400);
             font-size: 0.85rem;
+        }
+
+        footer a { color: var(--blue); text-decoration: none; }
+
+        /* ── Responsive ── */
+
+        @media (max-width: 768px) {
+            .config-grid { grid-template-columns: 1fr; }
+            .image-grid { grid-template-columns: 1fr 1fr; }
+            .section--orange { margin: 0 16px; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
+    <!-- ── Nav ── -->
+    <nav>
+        <div class="container">
+            <div class="nav-logo">FX</div>
+            <div class="nav-links">
+                <a href="#effects">Effects</a>
+                <a href="#modifiers">Modifiers</a>
+                <a href="#sections">Sections</a>
+                <a href="#config">Config</a>
+            </div>
+            <a href="https://github.com/krstivoja/gsap-animations-template" class="nav-badge">GitHub</a>
+        </div>
+    </nav>
+
+
     <!-- ═══════════════════════════════════════════
-         HERO — Page-load animations (-pl)
+         HERO
          ═══════════════════════════════════════════ -->
 
     <div class="hero">
         <div class="hero-bg fx-bg-reveal-pl"></div>
         <div class="container">
-            <div class="badge fx-spin-reveal-pl">New SDK</div>
-            <h1 class="fx-text-reveal-pl">Animation made<br>ridiculously simple.</h1>
-            <p class="fx-text-reveal-pl">Add a class. Get an animation. No JavaScript needed per page. Built on GSAP for buttery-smooth 60fps motion.</p>
+            <div class="hero-label fx-spin-reveal-pl">Animation SDK</div>
+            <h1 class="fx-text-reveal-pl">Add a class.<br>Get an animation.</h1>
+            <p class="fx-text-reveal-pl">A lightweight GSAP framework for WordPress and static sites. No build step. No JavaScript per page. Just CSS classes.</p>
+            <div class="hero-badges">
+                <div class="tag fx-spin-reveal-pl">Page Load</div>
+                <div class="tag fx-spin-reveal-pl">Scroll Trigger</div>
+                <div class="tag fx-spin-reveal-pl">Auto Stagger</div>
+            </div>
         </div>
     </div>
 
 
     <!-- ═══════════════════════════════════════════
-         TEXT REVEAL — Scroll triggered (-st)
+         HERO CODE — How the hero above was built
          ═══════════════════════════════════════════ -->
 
-    <section>
+    <section class="demo-section" id="page-load">
         <div class="container">
-            <p class="section-label fx-reveal-st">Text Reveal</p>
-            <h2 class="fx-text-reveal-st">Each line reveals with a mask,<br>sliding up one by one.</h2>
-            <p class="fx-text-reveal-st">Just add <code>.fx-text-reveal-st</code> to any text element. The SDK splits it into lines, wraps each in an overflow-hidden mask, and animates them in sequence.</p>
+            <div class="section-header">
+                <div class="section-label">Page Load Animation</div>
+                <h2 class="fx-text-reveal">How the hero above was built</h2>
+                <p class="desc fx-text-reveal">Every element in the hero uses a <code style="background:var(--blue-light);color:var(--blue);padding:2px 6px;border-radius:4px;font-weight:600;font-size:0.9em;">-pl</code> class to animate on page load. That's it — no JavaScript.</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <span>HTML</span>
+                </div>
+                <div class="code-body"><pre><span class="comment">&lt;!-- Background slides up on page load --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"hero-bg fx-bg-reveal-pl"</span><span class="tag">&gt;&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Badge spins in --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"hero-label fx-spin-reveal-pl"</span><span class="tag">&gt;</span>Animation SDK<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Heading reveals line by line --&gt;</span>
+<span class="tag">&lt;h1</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal-pl"</span><span class="tag">&gt;</span>Add a class.&lt;br&gt;Get an animation.<span class="tag">&lt;/h1&gt;</span>
+
+<span class="comment">&lt;!-- Paragraph reveals line by line --&gt;</span>
+<span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal-pl"</span><span class="tag">&gt;</span>A lightweight GSAP framework...<span class="tag">&lt;/p&gt;</span>
+
+<span class="comment">&lt;!-- Tags spin in, auto-staggered because they share a parent --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"hero-badges"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"tag fx-spin-reveal-pl"</span><span class="tag">&gt;</span>Page Load<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"tag fx-spin-reveal-pl"</span><span class="tag">&gt;</span>Scroll Trigger<span class="tag">&lt;/div&gt;</span>
+  <span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"tag fx-spin-reveal-pl"</span><span class="tag">&gt;</span>Auto Stagger<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/div&gt;</span></pre>
+                </div>
+            </div>
         </div>
     </section>
 
 
-    <!-- ═══════════════════════════════════════════
-         IMAGE REVEAL — Scroll triggered
-         ═══════════════════════════════════════════ -->
+    <!-- ── Install ── -->
 
-    <section>
+    <section class="demo-section">
         <div class="container">
-            <p class="section-label fx-reveal-st">Image Reveal</p>
-            <h2 class="fx-text-reveal-st">Images slide up with a fade.</h2>
-            <p class="fx-text-reveal-st">Siblings with the same class get auto-staggered.</p>
+            <div class="section-header">
+                <div class="section-label">Getting Started</div>
+                <h2 class="fx-text-reveal">Install and load</h2>
+                <p class="desc fx-text-reveal">Four script tags. That's the entire setup.</p>
+            </div>
 
-            <div class="image-grid">
-                <img src="https://picsum.photos/seed/fx1/600/450" alt="Demo" class="fx-reveal-st" />
-                <img src="https://picsum.photos/seed/fx2/600/450" alt="Demo" class="fx-reveal-st" />
-                <img src="https://picsum.photos/seed/fx3/600/450" alt="Demo" class="fx-reveal-st" />
+            <div class="install-bar fx-reveal">
+                <span>$</span>
+                <code>npm install</code>
+            </div>
+
+            <div class="code-block" style="margin-top: 16px;">
+                <div class="code-header">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <span>HTML</span>
+                </div>
+                <div class="code-body"><pre><span class="comment">&lt;!-- 1. GSAP core --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"node_modules/gsap/dist/gsap.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="comment">&lt;!-- 2. Plugins --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"node_modules/gsap/dist/ScrollTrigger.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"node_modules/gsap/dist/SplitText.min.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+<span class="comment">&lt;!-- 3. FX SDK --&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"src/fx.js"</span><span class="tag">&gt;&lt;/script&gt;</span></pre>
+                </div>
             </div>
         </div>
     </section>
 
 
     <!-- ═══════════════════════════════════════════
-         SPIN REVEAL — Scroll triggered
+         TEXT REVEAL
          ═══════════════════════════════════════════ -->
 
-    <section>
+    <section class="demo-section" id="effects">
         <div class="container">
-            <p class="section-label fx-reveal-st">Spin Reveal</p>
-            <h2 class="fx-text-reveal-st">Rotate and scale in for flair.</h2>
+            <div class="section-header">
+                <div class="section-label">Text Reveal</div>
+                <h2 class="fx-text-reveal">Lines reveal with a mask,<br>sliding up one by one.</h2>
+                <p class="desc fx-text-reveal">Splits text into lines, wraps each in an overflow-hidden mask, and animates them in sequence. Works on any text element.</p>
+            </div>
 
-            <div style="display: flex; gap: 16px; margin-top: 32px;">
-                <div class="badge fx-spin-reveal-st">Design</div>
-                <div class="badge fx-spin-reveal-st">Motion</div>
-                <div class="badge fx-spin-reveal-st">Code</div>
+            <div class="demo-split">
+                <div class="demo-preview">
+                    <h3 class="fx-text-reveal-st">Beautiful typography in motion.</h3>
+                    <p class="fx-text-reveal-st">Every line slides up from behind a mask, creating a polished reveal effect that draws the reader's eye.</p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="comment">&lt;!-- Page load --&gt;</span>
+<span class="tag">&lt;h1</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal-pl"</span><span class="tag">&gt;</span>Hello World<span class="tag">&lt;/h1&gt;</span>
+
+<span class="comment">&lt;!-- Scroll triggered --&gt;</span>
+<span class="tag">&lt;h2</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal-st"</span><span class="tag">&gt;</span>Animates on scroll<span class="tag">&lt;/h2&gt;</span>
+
+<span class="comment">&lt;!-- Inside a section (auto scroll-triggered) --&gt;</span>
+<span class="tag">&lt;section&gt;</span>
+  <span class="tag">&lt;h2</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal"</span><span class="tag">&gt;</span>No suffix needed<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;/section&gt;</span></pre>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
 
     <!-- ═══════════════════════════════════════════
-         SCALE IN — Glass card on scroll
+         IMAGE REVEAL
          ═══════════════════════════════════════════ -->
 
-    <section>
+    <section class="demo-section">
         <div class="container">
-            <p class="section-label fx-reveal-st">Scale In</p>
-            <h2 class="fx-text-reveal-st">Glass cards scale up smoothly.</h2>
+            <div class="section-header">
+                <div class="section-label">Reveal</div>
+                <h2 class="fx-text-reveal">Images slide up with a fade.</h2>
+                <p class="desc fx-text-reveal">Siblings with the same class get auto-staggered with a 0.15s delay between each.</p>
+            </div>
 
-            <div class="glass-card fx-scale-in-st">
-                <h3 class="fx-text-reveal-st">Ready to try it?</h3>
-                <p class="fx-text-reveal-st">Drop <code>fx.js</code> into your project and start adding classes.</p>
+            <div class="demo-split">
+                <div class="demo-preview">
+                    <div class="image-grid">
+                        <img src="https://picsum.photos/seed/fx1/600/450" alt="Demo" class="fx-reveal-st" />
+                        <img src="https://picsum.photos/seed/fx2/600/450" alt="Demo" class="fx-reveal-st" />
+                        <img src="https://picsum.photos/seed/fx3/600/450" alt="Demo" class="fx-reveal-st" />
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="comment">&lt;!-- Auto-staggered siblings --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"grid"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo-1.jpg"</span> <span class="attr">class</span>=<span class="val">"fx-reveal-st"</span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo-2.jpg"</span> <span class="attr">class</span>=<span class="val">"fx-reveal-st"</span> <span class="tag">/&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo-3.jpg"</span> <span class="attr">class</span>=<span class="val">"fx-reveal-st"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Single element --&gt;</span>
+<span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"hero.jpg"</span> <span class="attr">class</span>=<span class="val">"fx-reveal-pl"</span> <span class="tag">/&gt;</span></pre>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
 
     <!-- ═══════════════════════════════════════════
-         CSS CUSTOM PROPERTIES OVERRIDE
+         SPIN REVEAL (orange section)
          ═══════════════════════════════════════════ -->
 
-    <section>
+    <div class="demo-section section--orange">
         <div class="container">
-            <p class="section-label fx-reveal-st">Custom Timing</p>
-            <h2 class="fx-text-reveal-st fx-duration-[2] fx-stagger-[0.25]">Override duration and stagger<br>with modifier classes.</h2>
-            <p class="fx-text-reveal-st">This heading uses <code>fx-duration-[2]</code> and <code>fx-stagger-[0.25]</code> for a slower, more dramatic feel.</p>
+            <div class="section-header">
+                <div class="section-label">Spin Reveal</div>
+                <h2 class="fx-text-reveal-st">Rotate and scale in for flair.</h2>
+                <p class="desc fx-text-reveal-st">Rotates from -30deg and scales from 0.9. Great for badges, icons, and decorative elements.</p>
+            </div>
+
+            <div class="demo-split">
+                <div class="demo-preview">
+                    <div class="badge-row">
+                        <div class="badge badge--blue fx-spin-reveal-st">Design</div>
+                        <div class="badge badge--orange fx-spin-reveal-st">Motion</div>
+                        <div class="badge badge--purple fx-spin-reveal-st">Code</div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"badge fx-spin-reveal-st"</span><span class="tag">&gt;</span>Design<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"badge fx-spin-reveal-st"</span><span class="tag">&gt;</span>Motion<span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"badge fx-spin-reveal-st"</span><span class="tag">&gt;</span>Code<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- On page load --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"icon fx-spin-reveal-pl"</span><span class="tag">&gt;</span>...<span class="tag">&lt;/div&gt;</span></pre>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 
 
     <!-- ═══════════════════════════════════════════
-         BARE CLASSES — Section auto-trigger
+         SCALE IN
          ═══════════════════════════════════════════ -->
 
-    <section>
+    <section class="demo-section">
         <div class="container">
-            <p class="section-label fx-reveal">Bare Classes</p>
-            <h2 class="fx-text-reveal">No -pl or -st suffix needed.</h2>
-            <p class="fx-text-reveal">Elements with bare <code>.fx-text-reveal</code> inside a <code>&lt;section&gt;</code> are auto scroll-triggered using the section as the trigger. Zero config needed.</p>
+            <div class="section-header">
+                <div class="section-label">Scale In</div>
+                <h2 class="fx-text-reveal">Cards and panels scale up smoothly.</h2>
+                <p class="desc fx-text-reveal">Scales from 0.92 with a fade. Ideal for cards, hero panels, and featured content.</p>
+            </div>
 
-            <div class="image-grid">
-                <img src="https://picsum.photos/seed/fx4/600/450" alt="Demo" class="fx-reveal" />
-                <img src="https://picsum.photos/seed/fx5/600/450" alt="Demo" class="fx-reveal" />
-                <img src="https://picsum.photos/seed/fx6/600/450" alt="Demo" class="fx-reveal" />
+            <div class="demo-split">
+                <div class="demo-preview" style="padding: 24px;">
+                    <div class="glass-card fx-scale-in-st">
+                        <h3 class="fx-text-reveal-st">Ready to try it?</h3>
+                        <p class="fx-text-reveal-st">Drop fx.js into your project and start adding classes.</p>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"card fx-scale-in-st"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;h3&gt;</span>Ready to try it?<span class="tag">&lt;/h3&gt;</span>
+  <span class="tag">&lt;p&gt;</span>Drop fx.js into your project.<span class="tag">&lt;/p&gt;</span>
+<span class="tag">&lt;/div&gt;</span>
+
+<span class="comment">&lt;!-- Background panel --&gt;</span>
+<span class="tag">&lt;div</span> <span class="attr">class</span>=<span class="val">"hero-bg fx-bg-reveal-pl"</span><span class="tag">&gt;&lt;/div&gt;</span></pre>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
 
     <!-- ═══════════════════════════════════════════
-         TAG MAP — Zero-class auto-animation
+         MODIFIER CLASSES
          ═══════════════════════════════════════════ -->
 
-    <section class="tagmap-demo">
+    <section class="demo-section" id="modifiers">
         <div class="container">
-            <p style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:#e94560;margin-bottom:12px;">Tag Map</p>
-            <h2>This heading animates with zero classes.</h2>
-            <p>When <code>FX.config.tagMap</code> is set, elements inside sections are auto-animated by their tag name. This entire section has no <code>.fx-*</code> classes at all.</p>
-            <img src="https://picsum.photos/seed/fx7/800/400" alt="Demo" style="width:100%;border-radius:12px;margin-top:32px;" />
+            <div class="section-header">
+                <div class="section-label">Modifier Classes</div>
+                <h2 class="fx-text-reveal">Override timing with classes.</h2>
+                <p class="desc fx-text-reveal">No inline styles needed. Uses bracket syntax — perfect for Gutenberg's "Additional CSS classes" field.</p>
+            </div>
+
+            <div class="config-grid" style="margin-bottom: 32px;">
+                <div class="config-card fx-reveal-st">
+                    <h4>fx-duration-[n]</h4>
+                    <p>Animation duration in seconds. Default: <code>1.2</code> (text) / <code>1</code> (others)</p>
+                </div>
+                <div class="config-card fx-reveal-st">
+                    <h4>fx-delay-[n]</h4>
+                    <p>Start delay in seconds. Default: <code>0</code></p>
+                </div>
+                <div class="config-card fx-reveal-st">
+                    <h4>fx-stagger-[n]</h4>
+                    <p>Delay between staggered siblings. Default: <code>0.1</code></p>
+                </div>
+                <div class="config-card fx-reveal-st">
+                    <h4>fx-ease-[name]</h4>
+                    <p>GSAP easing function. Default: <code>power3.out</code></p>
+                </div>
+            </div>
+
+            <div class="demo-split">
+                <div class="demo-preview">
+                    <h3 class="fx-text-reveal-st fx-duration-[2] fx-stagger-[0.25]">This heading is slower and more dramatic.</h3>
+                    <p class="fx-text-reveal-st fx-delay-[0.5]">And this paragraph has a delayed start.</p>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="comment">&lt;!-- Slower text with wider stagger --&gt;</span>
+<span class="tag">&lt;h2</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal-st fx-duration-[2] fx-stagger-[0.25]"</span><span class="tag">&gt;</span>
+  Slower and more dramatic
+<span class="tag">&lt;/h2&gt;</span>
+
+<span class="comment">&lt;!-- Delayed start + custom easing --&gt;</span>
+<span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="val">"fx-reveal-st fx-delay-[0.5] fx-ease-[power2.inOut]"</span><span class="tag">&gt;</span>
+  Custom timing
+<span class="tag">&lt;/p&gt;</span></pre>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
+
+    <!-- ═══════════════════════════════════════════
+         SECTION AUTO-TRIGGER
+         ═══════════════════════════════════════════ -->
+
+    <section class="demo-section" id="sections">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Section Trigger</div>
+                <h2 class="fx-text-reveal">Bare classes inside sections.</h2>
+                <p class="desc fx-text-reveal">Elements with bare <code style="background:var(--blue-light);color:var(--blue);padding:2px 6px;border-radius:4px;font-weight:600;font-size:0.9em;">.fx-text-reveal</code> (no suffix) inside a <code style="background:var(--blue-light);color:var(--blue);padding:2px 6px;border-radius:4px;font-weight:600;font-size:0.9em;">&lt;section&gt;</code> are auto scroll-triggered.</p>
+            </div>
+
+            <div class="demo-split">
+                <div class="demo-preview">
+                    <div class="image-grid">
+                        <img src="https://picsum.photos/seed/fx4/600/450" alt="Demo" class="fx-reveal" />
+                        <img src="https://picsum.photos/seed/fx5/600/450" alt="Demo" class="fx-reveal" />
+                        <img src="https://picsum.photos/seed/fx6/600/450" alt="Demo" class="fx-reveal" />
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="comment">&lt;!-- No -pl or -st suffix needed inside &lt;section&gt; --&gt;</span>
+<span class="tag">&lt;section&gt;</span>
+  <span class="tag">&lt;h2</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal"</span><span class="tag">&gt;</span>Auto triggered<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p</span> <span class="attr">class</span>=<span class="val">"fx-text-reveal"</span><span class="tag">&gt;</span>By the section<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">class</span>=<span class="val">"fx-reveal"</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/section&gt;</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════
+         TAG MAP CONFIG
+         ═══════════════════════════════════════════ -->
+
+    <section class="demo-section" id="config">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Tag Map</div>
+                <h2 class="fx-text-reveal">Zero-class auto-animation.</h2>
+                <p class="desc fx-text-reveal">Configure once — every heading, paragraph, and image inside sections animates automatically by tag name.</p>
+            </div>
+
+            <div class="demo-split">
+                <div class="demo-preview tagmap-demo">
+                    <h3>This heading has no FX classes.</h3>
+                    <p>Neither does this paragraph. The tagMap config handles it automatically based on the tag name.</p>
+                    <img src="https://picsum.photos/seed/fx7/800/400" alt="Demo" style="width:100%;border-radius:12px;margin-top:20px;" />
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots"><span></span><span></span><span></span></div>
+                        <span>HTML</span>
+                    </div>
+                    <div class="code-body"><pre><span class="comment">&lt;!-- Add this script tag before fx.js --&gt;</span>
+<span class="tag">&lt;script&gt;</span>
+  <span class="keyword">window</span>.__FX_CONFIG__ = {
+    <span class="attr">tagMap</span>: {
+      <span class="str">'h1,h2,h3,h4,h5,h6'</span>: <span class="str">'textReveal'</span>,
+      <span class="str">'p,blockquote'</span>:       <span class="str">'textReveal'</span>,
+      <span class="str">'img,video'</span>:           <span class="str">'reveal'</span>,
+    }
+  };
+<span class="tag">&lt;/script&gt;</span>
+<span class="tag">&lt;script</span> <span class="attr">src</span>=<span class="val">"src/fx.js"</span><span class="tag">&gt;&lt;/script&gt;</span>
+
+<span class="comment">&lt;!-- Now every section auto-animates by tag --&gt;</span>
+<span class="tag">&lt;section&gt;</span>
+  <span class="tag">&lt;h2&gt;</span>No classes needed<span class="tag">&lt;/h2&gt;</span>
+  <span class="tag">&lt;p&gt;</span>This animates automatically<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;img</span> <span class="attr">src</span>=<span class="val">"photo.jpg"</span> <span class="tag">/&gt;</span>
+<span class="tag">&lt;/section&gt;</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════
+         JS API
+         ═══════════════════════════════════════════ -->
+
+    <section class="demo-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">JavaScript API</div>
+                <h2 class="fx-text-reveal">For compound sequences.</h2>
+                <p class="desc fx-text-reveal">When classes alone aren't enough, use the FX global for custom orchestration.</p>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots"><span></span><span></span><span></span></div>
+                    <span>JavaScript</span>
+                </div>
+                <div class="code-body"><pre><span class="comment">// Compound sequence — card scales in, then heading reveals</span>
+<span class="keyword">var</span> hero = <span class="keyword">document</span>.querySelector(<span class="str">'.hero'</span>);
+
+FX.<span class="keyword">scaleIn</span>(hero.querySelector(<span class="str">'.card'</span>), {
+  <span class="attr">trigger</span>: <span class="str">'scroll'</span>,
+  <span class="attr">scrollTrigger</span>: { <span class="attr">trigger</span>: hero }
+});
+
+FX.<span class="keyword">textReveal</span>(hero.querySelector(<span class="str">'h2'</span>), {
+  <span class="attr">trigger</span>: <span class="str">'scroll'</span>,
+  <span class="attr">delay</span>: <span class="val">0.2</span>,
+  <span class="attr">scrollTrigger</span>: { <span class="attr">trigger</span>: hero }
+});
+
+<span class="comment">// Available: FX.textReveal, FX.reveal, FX.spinReveal,</span>
+<span class="comment">//           FX.bgReveal, FX.scaleIn, FX.init</span></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ── Footer ── -->
 
     <footer>
-        FX Animation SDK &mdash; Built on GSAP
+        <p>FX Animation SDK &mdash; Built on <a href="https://gsap.com">GSAP</a> &mdash; <a href="https://github.com/krstivoja/gsap-animations-template">View on GitHub</a></p>
     </footer>
 
 
     <!-- ── Scripts ── -->
-    <!-- 1. GSAP core -->
     <script src="vendor/gsap.min.js"></script>
-    <!-- 2. GSAP plugins -->
     <script src="vendor/ScrollTrigger.min.js"></script>
     <script src="vendor/SplitText.min.js"></script>
-    <!-- 3. Optional: pre-configure before FX loads -->
     <script>
         window.__FX_CONFIG__ = {
             tagMap: {
@@ -291,11 +923,9 @@
                 'p':                   'textReveal',
                 'img,video':           'reveal',
             },
-            // Restrict tagMap to specific sections:
-            // sectionSelector: '.tagmap-demo',
+            sectionSelector: '.tagmap-demo',
         };
     </script>
-    <!-- 4. FX Animation SDK -->
     <script src="vendor/fx.js"></script>
 
 </body>
