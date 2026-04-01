@@ -1,12 +1,14 @@
----
-title: "Trigger Modes"
-permalink: /documentation/trigger-modes/
-layout: single
-sidebar:
-  nav: "docs"
-toc: true
-toc_sticky: true
----
+# Trigger Modes
+
+Every effect supports three trigger modes that control **when** the animation plays.
+
+## Overview
+
+| Mode | Suffix | When it animates |
+|------|--------|-----------------|
+| Page Load | `-pl` | Immediately when the page loads |
+| Scroll Trigger | `-st` | When the element scrolls into the viewport |
+| Section Trigger | _(none)_ | When the parent `<section>` scrolls into the viewport |
 
 ---
 
