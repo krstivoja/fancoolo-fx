@@ -3,7 +3,7 @@
  * Plugin Name: Fancoolo FX
  * Plugin URI: https://github.com/krstivoja/gsap-animations-template
  * Description: A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations — no JavaScript needed.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Fancoolo
  * Author URI: https://github.com/krstivoja
  * License: ISC
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FANCOOLO_FX_VERSION', '1.0.0' );
+define( 'FANCOOLO_FX_VERSION', '1.0.1' );
 define( 'FANCOOLO_FX_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FANCOOLO_FX_URL', plugin_dir_url( __FILE__ ) );
 
