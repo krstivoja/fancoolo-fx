@@ -239,16 +239,59 @@
     </section>
 
 
+    <!-- ═══════════════════════════════════════════
+         BARE CLASSES — Section auto-trigger
+         ═══════════════════════════════════════════ -->
+
+    <section>
+        <div class="container">
+            <p class="section-label fx-reveal">Bare Classes</p>
+            <h2 class="fx-text-reveal">No -pl or -st suffix needed.</h2>
+            <p class="fx-text-reveal">Elements with bare <code>.fx-text-reveal</code> inside a <code>&lt;section&gt;</code> are auto scroll-triggered using the section as the trigger. Zero config needed.</p>
+
+            <div class="image-grid">
+                <img src="https://picsum.photos/seed/fx4/600/450" alt="Demo" class="fx-reveal" />
+                <img src="https://picsum.photos/seed/fx5/600/450" alt="Demo" class="fx-reveal" />
+                <img src="https://picsum.photos/seed/fx6/600/450" alt="Demo" class="fx-reveal" />
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════
+         TAG MAP — Zero-class auto-animation
+         ═══════════════════════════════════════════ -->
+
+    <section class="tagmap-demo">
+        <div class="container">
+            <p style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em;color:#e94560;margin-bottom:12px;">Tag Map</p>
+            <h2>This heading animates with zero classes.</h2>
+            <p>When <code>FX.config.tagMap</code> is set, elements inside sections are auto-animated by their tag name. This entire section has no <code>.fx-*</code> classes at all.</p>
+            <img src="https://picsum.photos/seed/fx7/800/400" alt="Demo" style="width:100%;border-radius:12px;margin-top:32px;" />
+        </div>
+    </section>
+
+
     <footer>
         FX Animation SDK &mdash; Built on GSAP
     </footer>
 
 
     <!-- ── Scripts ── -->
-    <!-- SDK bundle (GSAP + ScrollTrigger + SplitText + FX) — handles all class-based animations -->
+    <!-- Pre-configure tagMap before SDK loads -->
+    <script>
+        window.__FX_CONFIG__ = {
+            tagMap: {
+                'h1,h2,h3,h4,h5,h6': 'textReveal',
+                'p':                   'textReveal',
+                'img,video':           'reveal',
+            },
+            // Restrict tagMap to specific sections:
+            // sectionSelector: '.tagmap-demo',
+        };
+    </script>
+    <!-- SDK bundle -->
     <script src="../dist/fx.js"></script>
-    <!-- Project-specific animations (optional — only needed for custom compound sequences) -->
-    <!-- <script src="dist/animations.js"></script> -->
 
 </body>
 </html>

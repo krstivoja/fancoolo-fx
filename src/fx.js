@@ -1,21 +1,56 @@
 /**
  * FX — Lightweight GSAP Animation SDK
  *
- * Apply animations via CSS classes:
- *   Page load:      .fx-text-reveal-pl, .fx-reveal-pl, .fx-spin-reveal-pl, .fx-bg-reveal-pl, .fx-scale-in-pl
- *   Scroll trigger: .fx-text-reveal-st, .fx-reveal-st, .fx-spin-reveal-st, .fx-bg-reveal-st, .fx-scale-in-st
+ * Three ways to trigger animations:
  *
- * Override per-element with modifier classes (Gutenberg-friendly):
+ *   1. Explicit classes with trigger suffix:
+ *      .fx-text-reveal-pl  (page load)
+ *      .fx-text-reveal-st  (scroll trigger)
+ *
+ *   2. Bare classes inside <section> — auto scroll-triggered:
+ *      <section>
+ *        <h2 class="fx-text-reveal">Auto scroll-triggered by section</h2>
+ *      </section>
+ *
+ *   3. Tag-based auto-animation (zero classes):
+ *      FX.config.tagMap = { 'h1,h2,h3': 'textReveal', 'img': 'reveal' }
+ *
+ * Modifier classes (Gutenberg-friendly):
  *   .fx-duration-[1.5]  .fx-delay-[0.3]  .fx-stagger-[0.2]  .fx-ease-[power2.inOut]
  *
- * Or use the JS API:
- *   FX.textReveal('.my-heading', { trigger: 'scroll', delay: 0.2 })
+ * JS API:
+ *   FX.textReveal(el, { trigger: 'scroll', delay: 0.2 })
  */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
+
+// ── Config ──────────────────────────────────
+
+export const config = {
+    /**
+     * CSS selector for section containers.
+     * Elements with bare .fx-* classes (no -pl/-st suffix) inside matching
+     * containers are auto scroll-triggered using the container as trigger.
+     */
+    sectionSelector: 'section',
+
+    /**
+     * Map of CSS selectors → effect names for zero-class auto-animation.
+     * Elements matching these selectors inside sections get animated automatically.
+     * Set to null/false to disable. Override before DOMContentLoaded or call FX.init().
+     *
+     * Example:
+     *   FX.config.tagMap = {
+     *       'h1,h2,h3,h4,h5,h6': 'textReveal',
+     *       'p,blockquote':       'textReveal',
+     *       'img,video':          'reveal',
+     *   }
+     */
+    tagMap: null,
+};
 
 // ── Defaults ────────────────────────────────
 
@@ -216,42 +251,121 @@ function groupByParent(nodeList) {
 }
 
 /**
- * Scan the DOM for .fx-* classes and apply animations.
- * Called automatically on DOMContentLoaded, or manually via FX.init().
+ * Apply a scroll-triggered effect to a group of elements sharing a trigger.
  */
-export function init() {
-    Object.keys(effects).forEach(name => {
-        const fn = effects[name];
-
-        // Page-load variant: .fx-<name>-pl
-        const plGroups = groupByParent(document.querySelectorAll('.' + name + '-pl'));
-        plGroups.forEach(group => {
-            group.forEach((el, i) => fn(el, { delay: i * 0.15 }));
-        });
-
-        // Scroll-trigger variant: .fx-<name>-st
-        const stGroups = groupByParent(document.querySelectorAll('.' + name + '-st'));
-        stGroups.forEach(group => {
-            const sharedTrigger = group[0].parentElement || group[0];
-            group.forEach((el, i) => {
-                fn(el, {
-                    trigger: 'scroll',
-                    delay: i * 0.15,
-                    scrollTrigger: { trigger: sharedTrigger },
-                });
-            });
+function applyScrollGroup(fn, group, triggerEl) {
+    group.forEach((el, i) => {
+        fn(el, {
+            trigger: 'scroll',
+            delay: i * 0.15,
+            scrollTrigger: { trigger: triggerEl },
         });
     });
 }
 
+/**
+ * Scan the DOM for .fx-* classes and apply animations.
+ * Called automatically on DOMContentLoaded, or manually via FX.init().
+ */
+export function init() {
+    const processed = new Set();
+
+    Object.keys(effects).forEach(name => {
+        const fn = effects[name];
+
+        // 1. Page-load variant: .fx-<name>-pl
+        const plGroups = groupByParent(document.querySelectorAll('.' + name + '-pl'));
+        plGroups.forEach(group => {
+            group.forEach((el, i) => {
+                fn(el, { delay: i * 0.15 });
+                processed.add(el);
+            });
+        });
+
+        // 2. Explicit scroll-trigger variant: .fx-<name>-st
+        const stGroups = groupByParent(document.querySelectorAll('.' + name + '-st'));
+        stGroups.forEach(group => {
+            const triggerEl = group[0].parentElement || group[0];
+            applyScrollGroup(fn, group, triggerEl);
+            group.forEach(el => processed.add(el));
+        });
+
+        // 3. Bare class inside a section: .fx-<name> (no suffix)
+        //    Auto scroll-triggered using the closest section as trigger
+        if (config.sectionSelector) {
+            document.querySelectorAll(config.sectionSelector).forEach(section => {
+                const bareEls = Array.from(section.querySelectorAll('.' + name))
+                    .filter(el => !processed.has(el));
+                if (bareEls.length === 0) return;
+
+                const groups = groupByParent(bareEls);
+                groups.forEach(group => {
+                    applyScrollGroup(fn, group, section);
+                    group.forEach(el => processed.add(el));
+                });
+            });
+        }
+    });
+
+    // 4. Tag-based auto-animation inside sections
+    if (config.tagMap && config.sectionSelector) {
+        document.querySelectorAll(config.sectionSelector).forEach(section => {
+            Object.keys(config.tagMap).forEach(selector => {
+                const effectName = config.tagMap[selector];
+                const fn = effects['fx-' + camelToKebab(effectName)] || effectsByName[effectName];
+                if (!fn) return;
+
+                const els = Array.from(section.querySelectorAll(selector))
+                    .filter(el => !processed.has(el));
+                if (els.length === 0) return;
+
+                const groups = groupByParent(els);
+                groups.forEach(group => {
+                    applyScrollGroup(fn, group, section);
+                    group.forEach(el => processed.add(el));
+                });
+            });
+        });
+    }
+}
+
+/**
+ * Convert camelCase to kebab-case: 'textReveal' → 'text-reveal'
+ */
+function camelToKebab(str) {
+    return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+/**
+ * Lookup map by camelCase name for tagMap config.
+ */
+const effectsByName = {
+    textReveal, reveal, spinReveal, bgReveal, scaleIn,
+};
+
 // ── Auto-init ───────────────────────────────
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
+/**
+ * Merge pre-configuration from window.__FX_CONFIG__ (set before SDK loads).
+ */
+function applyPreConfig() {
+    const pre = window.__FX_CONFIG__;
+    if (!pre) return;
+    if (pre.sectionSelector !== undefined) config.sectionSelector = pre.sectionSelector;
+    if (pre.tagMap !== undefined) config.tagMap = pre.tagMap;
+}
+
+function boot() {
+    applyPreConfig();
     init();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+} else {
+    boot();
 }
 
 // ── Public API on window ────────────────────
 
-window.FX = { textReveal, reveal, spinReveal, bgReveal, scaleIn, init };
+window.FX = { config, textReveal, reveal, spinReveal, bgReveal, scaleIn, init };

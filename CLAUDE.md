@@ -20,13 +20,27 @@ A class-driven GSAP animation framework. Users add CSS classes to HTML elements 
 | BG Reveal | `bgReveal()` | Slide up from y:100% + fade |
 | Scale In | `scaleIn()` | Scale from 0.92 + fade |
 
-### Class naming convention
-- Effect + trigger: `.fx-{effect}-{trigger}` where trigger is `pl` (page load) or `st` (scroll trigger)
-- Modifier overrides: `.fx-{property}-[{value}]` e.g. `fx-duration-[2]`, `fx-delay-[0.3]`
+### Three trigger modes
+1. **Explicit suffix**: `.fx-{effect}-pl` (page load) or `.fx-{effect}-st` (scroll trigger)
+2. **Bare class in section**: `.fx-{effect}` (no suffix) inside a `<section>` → auto scroll-triggered using the section as trigger
+3. **Tag map**: `FX.config.tagMap = { 'h1,h2': 'textReveal' }` → zero-class auto-animation by tag name inside sections
+
+### Modifier overrides
+- `.fx-{property}-[{value}]` e.g. `fx-duration-[2]`, `fx-delay-[0.3]`
 - Bracket syntax chosen because Gutenberg class field supports it and values can contain dots
+
+### Config (`FX.config`)
+- `sectionSelector` (default: `'section'`) — CSS selector for containers that enable bare-class and tag-map auto-triggering
+- `tagMap` (default: `null`) — map of CSS selectors → effect names for zero-class animation
+
+### Pre-configuration
+Set `window.__FX_CONFIG__` before the SDK script loads to configure `sectionSelector` and `tagMap` without needing JS after load.
 
 ### Auto-stagger
 Elements with the same `.fx-*` class grouped under the same parent are staggered automatically (0.15s gap).
+
+### Processing priority
+init() uses a `processed` Set to avoid double-animating: explicit `-pl`/`-st` first, then bare classes in sections, then tagMap. Each step skips already-processed elements.
 
 ## Example project (`example/`)
 - `example/index.html` — demo page showing all effects

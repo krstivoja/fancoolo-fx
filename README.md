@@ -56,9 +56,65 @@ The heading animates with a masked line-reveal on page load.
 | BG Reveal | `.fx-bg-reveal-pl` | `.fx-bg-reveal-st` | Background slide up |
 | Scale In | `.fx-scale-in-pl` | `.fx-scale-in-st` | Scale up + fade |
 
-**Trigger suffixes:**
+**Three trigger modes:**
 - `-pl` — **Page load**: animates when the DOM is ready
 - `-st` — **Scroll trigger**: animates when the element enters the viewport
+- **No suffix** — **Section trigger**: bare `.fx-text-reveal` inside a `<section>` is auto scroll-triggered using the section as the trigger
+
+## How Scroll Triggering Works
+
+When the SDK sees a scroll-triggered element (`-st` suffix or bare class inside a section), it creates a GSAP ScrollTrigger with these defaults:
+
+- **`start: 'top 85%'`** — the animation fires when the top of the element (or its section) reaches 85% down from the top of the viewport
+- **`once: true`** — plays once, doesn't replay on re-scroll
+
+For grouped siblings (same class, same parent), the parent is used as the shared trigger — so all items animate together with stagger, rather than each triggering independently.
+
+## Section Auto-Trigger
+
+Elements with bare `.fx-*` classes (no `-pl`/`-st` suffix) inside a `<section>` are automatically scroll-triggered using the section as the trigger:
+
+```html
+<section>
+    <h2 class="fx-text-reveal">This auto-triggers on scroll</h2>
+    <p class="fx-text-reveal">No suffix needed inside a section</p>
+    <img src="photo.jpg" class="fx-reveal" />
+</section>
+```
+
+Change the container selector via config:
+
+```js
+FX.config.sectionSelector = '.animate-section';  // only sections with this class
+FX.config.sectionSelector = 'section, .wp-block-group';  // multiple selectors
+```
+
+## Tag-Based Auto-Animation
+
+For zero-class animation, configure `tagMap` to automatically animate elements by their tag name inside sections:
+
+```html
+<!-- Set config BEFORE the SDK script loads -->
+<script>
+    window.__FX_CONFIG__ = {
+        tagMap: {
+            'h1,h2,h3,h4,h5,h6': 'textReveal',
+            'p,blockquote':       'textReveal',
+            'img,video':          'reveal',
+        }
+    };
+</script>
+<script src="dist/fx.min.js"></script>
+```
+
+Or configure after load and re-init:
+
+```js
+FX.config.tagMap = { 'h1,h2,h3': 'textReveal', 'img': 'reveal' };
+FX.init();
+```
+
+Elements already animated by explicit `.fx-*` classes are skipped — tagMap only picks up unhandled elements.
 
 ## Auto-Stagger
 
