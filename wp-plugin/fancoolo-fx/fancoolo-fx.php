@@ -210,10 +210,6 @@ function fancoolo_fx_render_admin_page() {
 
 		<!-- ═══ Editor Tab ═══ -->
 		<div class="ffx-panel active" data-panel="editor">
-			<p>
-				This code loads after fx.js on the frontend. Leave empty to use defaults only.<br>
-				<strong>Important:</strong> Always add <code>FX.init();</code> at the end when changing config — it re-scans the page with your new settings.
-			</p>
 			<form method="post">
 				<?php wp_nonce_field( 'fancoolo_fx_save_action', 'fancoolo_fx_nonce' ); ?>
 				<textarea
