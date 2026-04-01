@@ -92,7 +92,7 @@
         '<a href="../" class="flex items-center gap-2"><span class="text-lg font-extrabold tracking-tight">Fancoolo</span><span class="text-xs font-bold text-white bg-brand-blue px-2 py-0.5 rounded">FX</span></a>' +
         '<div class="flex items-center gap-3">' +
         '<a href="../" class="text-sm text-gray-500 hover:text-gray-900 font-medium hidden sm:inline">Live Demo</a>' +
-        '<a href="https://github.com/krstivoja/gsap-animations-template" class="flex items-center gap-2 text-sm bg-gray-900 text-white px-3.5 py-1.5 rounded-full font-medium hover:bg-gray-700 transition">' + ghIcon + ' GitHub</a>' +
+        '<a href="https://github.com/krstivoja/fancoolo-fx" class="flex items-center gap-2 text-sm bg-gray-900 text-white px-3.5 py-1.5 rounded-full font-medium hover:bg-gray-700 transition">' + ghIcon + ' GitHub</a>' +
         '</div></div></header>' +
 
         '<div class="max-w-7xl mx-auto flex min-h-screen">' +

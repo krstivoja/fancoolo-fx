@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Fancoolo FX
- * Plugin URI: https://github.com/krstivoja/gsap-animations-template
+ * Plugin URI: https://github.com/krstivoja/fancoolo-fx
  * Description: A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations — no JavaScript needed.
  * Version: 1.0.2
  * Author: Fancoolo
@@ -360,7 +360,7 @@ FX.init();</pre>
 			<strong style="color:#1d2327;">Important:</strong> Always add <code>FX.init();</code> at the end when changing config — it re-scans the page with your new settings.
 		</p>
 		<p style="margin-top: 12px;">
-			<a href="https://krstivoja.github.io/gsap-animations-template/documentation/" target="_blank">
+			<a href="https://krstivoja.github.io/fancoolo-fx/documentation/" target="_blank">
 				Full Documentation &rarr;
 			</a>
 		</p>
