@@ -84,7 +84,7 @@
         spinReveal:  { duration: 1.4, ease: 'power3.out' },
         bgReveal:    { duration: 1,   ease: 'power3.out' },
         scaleIn:     { duration: 1,   ease: 'power3.out' },
-        fadeIn:      { duration: 0.8, ease: 'power2.out' },
+        fadeIn:      { duration: 1.4, ease: 'power1.out' },
         blurIn:      { duration: 1.2, ease: 'power2.out' },
         clipUp:      { duration: 1,   ease: 'power3.inOut' },
         clipDown:    { duration: 1,   ease: 'power3.inOut' },
