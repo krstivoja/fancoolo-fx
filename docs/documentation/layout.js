@@ -50,7 +50,7 @@
             html += '</ul></div>';
         });
         html += '<div class="pt-4 border-t border-gray-200/60">';
-        html += '<a href="https://www.npmjs.com/package/@fancoolo/fx" class="flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-gray-400 hover:text-brand-blue transition">npm i @fancoolo/fx</a>';
+        html += '<a href="https://www.npmjs.com/package/fancoolo-fx" class="flex items-center gap-2 px-3 py-1.5 text-xs font-mono text-gray-400 hover:text-brand-blue transition">npm i fancoolo-fx</a>';
         html += '</div>';
         return html;
     }

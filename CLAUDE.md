@@ -1,4 +1,4 @@
-# @fancoolo/fx — Fancoolo FX
+# fancoolo-fx — Fancoolo FX
 
 ## What this is
 A class-driven GSAP animation wrapper for WordPress and static sites. Users add CSS classes to HTML elements and get animations — no JS needed per page. Built for WordPress/Gutenberg where only class names (not data attributes or inline styles) can be added to blocks.

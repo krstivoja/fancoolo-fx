@@ -1,20 +1,22 @@
 # Installation
 
+## npm
+
+```bash
+npm install fancoolo-fx
+```
+
+This installs Fancoolo FX and GSAP (with all plugins) into `node_modules/`.
+
+**Package:** [fancoolo-fx on npm](https://www.npmjs.com/package/fancoolo-fx)
+
 ## Requirements
 
-- [GSAP 3.x](https://gsap.com) (included via npm)
+- [GSAP 3.x](https://gsap.com) (installed automatically as a dependency)
 - ScrollTrigger plugin (included with GSAP)
 - SplitText plugin (included with GSAP)
 
 All GSAP plugins are free as of GSAP 3.12.
-
-## Step 1: Install dependencies
-
-```bash
-npm install
-```
-
-This installs GSAP into `node_modules/gsap/`.
 
 ## Step 2: Add script tags
 

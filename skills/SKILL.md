@@ -1,6 +1,6 @@
 ---
 name: fancoolo-fx
-description: Fancoolo FX — a class-driven GSAP animation wrapper for WordPress and static sites. Use when the user asks about FX animations, fx-text-reveal, fx-reveal, fx-spin-reveal, fx-bg-reveal, fx-scale-in classes, FX.config, tagMap, sectionSelector, modifier classes like fx-duration-[n], or building animations with the @fancoolo/fx package. Also use when adding scroll-triggered or page-load animations via CSS classes in WordPress/Gutenberg.
+description: Fancoolo FX — a class-driven GSAP animation wrapper for WordPress and static sites. Use when the user asks about FX animations, fx-text-reveal, fx-reveal, fx-spin-reveal, fx-bg-reveal, fx-scale-in classes, FX.config, tagMap, sectionSelector, modifier classes like fx-duration-[n], or building animations with the fancoolo-fx package. Also use when adding scroll-triggered or page-load animations via CSS classes in WordPress/Gutenberg.
 license: MIT
 ---
 
@@ -8,7 +8,7 @@ license: MIT
 
 ## When to Use This Skill
 
-Apply when working with the `@fancoolo/fx` package or when the user mentions:
+Apply when working with the `fancoolo-fx` package or when the user mentions:
 - FX animation classes (`fx-text-reveal`, `fx-reveal`, `fx-spin-reveal`, `fx-bg-reveal`, `fx-scale-in`)
 - Trigger suffixes (`-pl`, `-st`, bare classes in sections)
 - FX modifier classes (`fx-duration-[n]`, `fx-delay-[n]`, `fx-stagger-[n]`, `fx-ease-[name]`, `fx-start-[pos]`)
