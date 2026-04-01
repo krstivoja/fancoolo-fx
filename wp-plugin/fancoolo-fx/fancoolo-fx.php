@@ -209,90 +209,121 @@ function fancoolo_fx_render_admin_page() {
 
 		<hr>
 
-		<h2>Quick Reference</h2>
-		<table class="widefat fixed striped" style="max-width: 700px;">
-			<thead>
-				<tr>
-					<th>Effect</th>
-					<th>Page Load</th>
-					<th>Scroll Trigger</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Text Reveal</td>
-					<td><code>fx-text-reveal-pl</code></td>
-					<td><code>fx-text-reveal-st</code></td>
-				</tr>
-				<tr>
-					<td>Reveal</td>
-					<td><code>fx-reveal-pl</code></td>
-					<td><code>fx-reveal-st</code></td>
-				</tr>
-				<tr>
-					<td>Spin Reveal</td>
-					<td><code>fx-spin-reveal-pl</code></td>
-					<td><code>fx-spin-reveal-st</code></td>
-				</tr>
-				<tr>
-					<td>BG Reveal</td>
-					<td><code>fx-bg-reveal-pl</code></td>
-					<td><code>fx-bg-reveal-st</code></td>
-				</tr>
-				<tr>
-					<td>Scale In</td>
-					<td><code>fx-scale-in-pl</code></td>
-					<td><code>fx-scale-in-st</code></td>
-				</tr>
-			</tbody>
-		</table>
+		<h2>Examples</h2>
+		<p>Copy any of these into the editor above and hit Save.</p>
 
-		<h3 style="margin-top: 1.5em;">Modifier Classes</h3>
-		<table class="widefat fixed striped" style="max-width: 700px;">
-			<thead>
-				<tr>
-					<th>Modifier</th>
-					<th>Example</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>Duration</td>
-					<td><code>fx-duration-[2]</code></td>
-				</tr>
-				<tr>
-					<td>Delay</td>
-					<td><code>fx-delay-[0.3]</code></td>
-				</tr>
-				<tr>
-					<td>Stagger</td>
-					<td><code>fx-stagger-[0.25]</code></td>
-				</tr>
-				<tr>
-					<td>Ease</td>
-					<td><code>fx-ease-[power2.inOut]</code></td>
-				</tr>
-				<tr>
-					<td>Scroll Start</td>
-					<td><code>fx-start-[top center]</code></td>
-				</tr>
-			</tbody>
-		</table>
-
-		<h3 style="margin-top: 1.5em;">Example: Custom Config</h3>
-		<pre style="background: #23282d; color: #eee; padding: 16px; border-radius: 4px; max-width: 700px; overflow-x: auto;"><code>// Auto-animate all headings and images inside sections
-window.__FX_CONFIG__ = {
-    tagMap: {
-        'h1,h2,h3,h4,h5,h6': 'textReveal',
-        'p': 'textReveal',
-        'img,video': 'reveal',
-    },
-    sectionSelector: 'section, .wp-block-group',
-    scrollStart: 'top 80%',
+		<h3 style="margin-top: 1.5em;">Auto-animate by tag (zero classes needed)</h3>
+		<pre style="background: #23282d; color: #eee; padding: 16px; border-radius: 4px; max-width: 700px; overflow-x: auto;"><code>// Every heading, paragraph, and image inside sections
+// animates automatically — no classes needed in Gutenberg
+FX.config.tagMap = {
+    'h1,h2,h3,h4,h5,h6': 'textReveal',
+    'p,blockquote':       'textReveal',
+    'img,video':          'reveal',
 };
-
-// Re-initialize with new config
+FX.config.sectionSelector = 'section, .wp-block-group';
 FX.init();</code></pre>
+
+		<h3 style="margin-top: 1.5em;">Change scroll trigger position</h3>
+		<pre style="background: #23282d; color: #eee; padding: 16px; border-radius: 4px; max-width: 700px; overflow-x: auto;"><code>// Trigger animations when elements reach the center of the viewport
+// instead of the default 85% (near the bottom)
+FX.config.scrollStart = 'top center';
+FX.init();</code></pre>
+
+		<h3 style="margin-top: 1.5em;">Replay animations on re-scroll</h3>
+		<pre style="background: #23282d; color: #eee; padding: 16px; border-radius: 4px; max-width: 700px; overflow-x: auto;"><code>// Animations replay every time the element enters the viewport
+// instead of playing once
+FX.config.scrollOnce = false;
+FX.init();</code></pre>
+
+		<h3 style="margin-top: 1.5em;">Compound sequence (JS API)</h3>
+		<pre style="background: #23282d; color: #eee; padding: 16px; border-radius: 4px; max-width: 700px; overflow-x: auto;"><code>// Orchestrate multiple animations with specific timing
+document.addEventListener('DOMContentLoaded', function () {
+    var hero = document.querySelector('.wp-block-cover');
+    if (!hero) return;
+
+    FX.scaleIn(hero, {
+        trigger: 'scroll',
+        scrollTrigger: { trigger: hero }
+    });
+
+    var heading = hero.querySelector('h2');
+    if (heading) {
+        FX.textReveal(heading, {
+            trigger: 'scroll',
+            delay: 0.2,
+            scrollTrigger: { trigger: hero }
+        });
+    }
+});</code></pre>
+
+		<h3 style="margin-top: 1.5em;">Available JS API functions</h3>
+		<table class="widefat fixed striped" style="max-width: 700px;">
+			<thead>
+				<tr>
+					<th>Function</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>FX.textReveal(el, opts)</code></td>
+					<td>Split text lines, masked reveal upward</td>
+				</tr>
+				<tr>
+					<td><code>FX.reveal(el, opts)</code></td>
+					<td>Slide up with fade</td>
+				</tr>
+				<tr>
+					<td><code>FX.spinReveal(el, opts)</code></td>
+					<td>Rotate and scale in</td>
+				</tr>
+				<tr>
+					<td><code>FX.bgReveal(el, opts)</code></td>
+					<td>Background slide up</td>
+				</tr>
+				<tr>
+					<td><code>FX.scaleIn(el, opts)</code></td>
+					<td>Scale up with fade</td>
+				</tr>
+				<tr>
+					<td><code>FX.init()</code></td>
+					<td>Re-scan DOM (call after changing config)</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h3 style="margin-top: 1.5em;">Config options</h3>
+		<table class="widefat fixed striped" style="max-width: 700px;">
+			<thead>
+				<tr>
+					<th>Option</th>
+					<th>Default</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><code>FX.config.sectionSelector</code></td>
+					<td><code>'section'</code></td>
+					<td>Containers for bare-class and tagMap triggering</td>
+				</tr>
+				<tr>
+					<td><code>FX.config.scrollStart</code></td>
+					<td><code>'top 85%'</code></td>
+					<td>When scroll animations trigger</td>
+				</tr>
+				<tr>
+					<td><code>FX.config.scrollOnce</code></td>
+					<td><code>true</code></td>
+					<td>Play once or replay on every scroll</td>
+				</tr>
+				<tr>
+					<td><code>FX.config.tagMap</code></td>
+					<td><code>null</code></td>
+					<td>Auto-animate by tag name (no classes needed)</td>
+				</tr>
+			</tbody>
+		</table>
 
 		<p style="margin-top: 2em;">
 			<a href="https://krstivoja.github.io/gsap-animations-template/documentation/" target="_blank">
