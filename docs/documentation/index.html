@@ -37,10 +37,11 @@
 <body class="bg-brand-cream text-gray-900 antialiased">
     <div id="app"></div>
     <script>window.DOC_PAGE = { id: 'index', file: null };</script>
-    <script src="layout.js"></script>
+    <script src="layout.js?v=2"></script>
     <script>
         // Render overview content directly
-        document.getElementById('doc-content').innerHTML =
+        var docEl = document.getElementById('doc-content');
+        if (docEl) docEl.innerHTML =
             '<h1>Fancoolo FX Documentation</h1>' +
             '<p class="text-lg text-gray-600">A class-driven GSAP animation wrapper for WordPress and static sites.</p>' +
             '<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 not-prose">' +
