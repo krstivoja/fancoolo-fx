@@ -123,6 +123,25 @@ function fancoolo_fx_enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'fancoolo_fx_enqueue_scripts' );
 
 /**
+ * ─── Block Editor: Enqueue FX Animation inspector panel ────────────
+ */
+function fancoolo_fx_enqueue_editor_assets() {
+	$asset_file = FANCOOLO_FX_PATH . 'assets/editor/index.asset.php';
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+	$asset = include $asset_file;
+	wp_enqueue_script(
+		'fancoolo-fx-editor',
+		FANCOOLO_FX_URL . 'assets/editor/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'fancoolo_fx_enqueue_editor_assets' );
+
+/**
  * ─── Helper: Get path to custom.js in uploads ──────────────────────
  */
 function fancoolo_fx_get_custom_file_path() {
