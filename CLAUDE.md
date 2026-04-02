@@ -66,7 +66,14 @@ init() uses a `processed` Set to avoid double-animating:
 
 ## Project structure
 ```
-├── src/fx.js                          ← Core wrapper (the npm package)
+├── fancoolo-fx.php                    ← WP plugin bootstrap (root = WP loads it directly)
+├── readme.txt                         ← WP plugin readme
+├── assets/                            ← GSAP + fx.js copies for WP
+│   ├── gsap.min.js
+│   ├── ScrollTrigger.min.js
+│   ├── SplitText.min.js
+│   └── fx.js                          ← Copy of src/fx.js (run `npm run sync`)
+├── src/fx.js                          ← Source of truth (the npm package entry)
 ├── package.json                       ← npm: fancoolo-fx
 ├── docs/                              ← GitHub Pages site
 │   ├── index.html                     ← Landing page with live demos
@@ -75,10 +82,6 @@ init() uses a `processed` Set to avoid double-animating:
 │       ├── index.html                 ← Single page shell
 │       ├── layout.js                  ← Builds sidebar, loads .md by hash
 │       └── *.md                       ← Content files (edit these)
-├── wp-plugin/fancoolo-fx/             ← WordPress plugin
-│   ├── fancoolo-fx.php                ← Single-file plugin
-│   ├── assets/                        ← GSAP + fx.js copies
-│   └── readme.txt                     ← WP plugin readme
 ├── skills/SKILL.md                    ← Claude Code skill (copy to ~/.claude/skills/fancoolo-fx/)
 ├── .github/workflows/release.yml      ← Tags → GitHub Release with plugin zip
 ├── CLAUDE.md                          ← This file
@@ -94,7 +97,7 @@ init() uses a `processed` Set to avoid double-animating:
 
 ## Publishing
 - **npm**: `npm publish --otp=CODE` (package: fancoolo-fx)
-- **GitHub Release**: push a tag like `1.2.0` → Actions zips wp-plugin → attaches to release
+- **GitHub Release**: push a tag like `1.2.0` → Actions zips plugin files from root → attaches to release
 - **GitHub Pages**: auto-deploys from `docs/` folder
 
 ## No build step
@@ -115,6 +118,6 @@ No bundler, no compilation. GSAP + plugins are loaded as separate script tags fr
 3. Add to the `effects` map for class-based auto-discovery
 4. Add to `effectsByName` for tagMap lookups
 5. Add to `window.FX`
-6. Copy fx.js to `docs/vendor/fx.js` and `wp-plugin/fancoolo-fx/assets/fx.js`
+6. Run `npm run sync` to copy fx.js to `assets/fx.js` and `docs/vendor/fx.js`
 7. Update: effects.md, skills/SKILL.md, WP plugin classes/API tables
 8. Bump version in package.json + fancoolo-fx.php, tag, push, npm publish

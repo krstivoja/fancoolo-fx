@@ -181,12 +181,14 @@ document.addEventListener('DOMContentLoaded', function () {
 ## File Structure
 
 ```
+├── fancoolo-fx.php             ← WordPress plugin
+├── readme.txt                  ← WP plugin readme
+├── assets/                     ← GSAP + fx.js copies for WP
+├── src/fx.js                   ← Source of truth (npm package entry)
 ├── package.json                ← npm deps (gsap)
-├── node_modules/gsap/dist/     ← GSAP core + plugins (loaded via script tags)
-├── src/fx.js                   ← Fancoolo FX
-├── example/
-│   ├── index.html              ← Demo page
-│   └── src/animations.js       ← Sample project-specific code
+├── docs/                       ← GitHub Pages site
+├── .distignore                 ← Files excluded from WP plugin zip
+├── .npmignore                  ← Files excluded from npm package
 ├── CLAUDE.md                   ← Project context for Claude
 └── README.md
 ```
@@ -194,3 +196,17 @@ document.addEventListener('DOMContentLoaded', function () {
 ## WordPress / Gutenberg
 
 Fancoolo FX uses CSS classes which you can add via the "Additional CSS class(es)" field in the block sidebar. No data attributes or inline styles needed.
+
+## Building the WordPress Plugin Zip
+
+Use [WP-CLI `dist-archive`](https://developer.wordpress.org/cli/commands/dist-archive/) to build a clean plugin zip. The `.distignore` file controls which files are excluded.
+
+```bash
+# Install the command (one-time)
+wp package install wp-cli/dist-archive-command
+
+# Build the zip from the project root
+wp dist-archive .
+```
+
+This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `readme.txt`, `assets/`). Upload it via **Plugins → Add New → Upload** in WordPress.

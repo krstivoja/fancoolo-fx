@@ -17,8 +17,11 @@ jobs:
 
       - name: Create plugin zip
         run: |
-          cd wp-plugin
-          zip -r ../fancoolo-fx.zip fancoolo-fx/
+          mkdir fancoolo-fx
+          cp fancoolo-fx.php fancoolo-fx/
+          cp readme.txt fancoolo-fx/
+          cp -r assets fancoolo-fx/
+          zip -r fancoolo-fx.zip fancoolo-fx/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

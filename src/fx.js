@@ -129,6 +129,9 @@
         var startOverride = getClassModifier(el, 'start', null);
         if (startOverride !== null) st.start = startOverride;
 
+        // Debug markers (set via window.__FX_DEBUG_MARKERS__ or WP plugin toggle)
+        if (window.__FX_DEBUG_MARKERS__) st.markers = true;
+
         return st;
     }
 

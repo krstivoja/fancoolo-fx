@@ -1,0 +1,15 @@
+src/
+docs/
+skills/
+node_modules/
+package.json
+package-lock.json
+.npmignore
+.gitignore
+.distignore
+.github/
+.claude/
+.nojekyll
+.git/
+CLAUDE.md
+README.md

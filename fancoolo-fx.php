@@ -3,7 +3,7 @@
  * Plugin Name: Fancoolo FX
  * Plugin URI: https://github.com/krstivoja/fancoolo-fx
  * Description: A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations — no JavaScript needed.
- * Version: 1.3.0
+ * Version: 1.4.0
  * Author: Fancoolo
  * Author URI: https://github.com/krstivoja
  * License: ISC
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FANCOOLO_FX_VERSION', '1.3.0' );
+define( 'FANCOOLO_FX_VERSION', '1.4.0' );
 define( 'FANCOOLO_FX_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FANCOOLO_FX_URL', plugin_dir_url( __FILE__ ) );
 
@@ -80,9 +80,9 @@ function fancoolo_fx_enqueue_scripts() {
 	);
 	wp_add_inline_script( 'fancoolo-fx', $config_js, 'before' );
 
-	// 6. Debug markers (admin only)
+	// 6. Debug markers (admin only) — must run before fx.js init()
 	if ( $s['debug_markers'] && is_user_logged_in() && current_user_can( 'manage_options' ) ) {
-		wp_add_inline_script( 'gsap-scrolltrigger', 'document.addEventListener("DOMContentLoaded", function() { ScrollTrigger.defaults({ markers: true }); });' );
+		wp_add_inline_script( 'fancoolo-fx', 'window.__FX_DEBUG_MARKERS__ = true;', 'before' );
 	}
 
 	// 7. Custom modifiers (if file exists and is not empty)
@@ -218,7 +218,8 @@ function fancoolo_fx_render_admin_page() {
 		.ffx-tab.active { background: #fff; border-color: #c3c4c7; color: #1d2327; }
 		.ffx-panel { display: none; background: #fff; border: 1px solid #c3c4c7; border-top: none; padding: 24px; }
 		.ffx-panel.active { display: block; }
-		.ffx-panel-editor { padding: 0; position: relative; display: flex; }
+		.ffx-panel-editor { padding: 0; }
+		.ffx-panel-editor form { display: flex; }
 		.ffx-panel-editor .ffx-editor-main { flex: 1; min-width: 0; position: relative; }
 		.ffx-panel-editor .CodeMirror { border: none; }
 		.ffx-save-btn { position: absolute; top: 12px; right: 12px; z-index: 10; }
