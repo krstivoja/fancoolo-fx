@@ -210,3 +210,23 @@ wp dist-archive .
 ```
 
 This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `readme.txt`, `assets/`). Upload it via **Plugins → Add New → Upload** in WordPress.
+
+## Publishing to npm
+
+```bash
+# Set token once (stored in ~/.npmrc)
+npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
+
+# Publish from the project root
+npm publish
+```
+
+Only `src/fx.js`, `package.json`, and `README.md` are published (controlled by `.npmignore`).
+
+## Release Checklist
+
+1. Bump version in `package.json` and `fancoolo-fx.php`
+2. Run `npm run sync` to copy `src/fx.js` to `assets/` and `docs/vendor/`
+3. Commit and push to main
+4. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z` (triggers GitHub Release with plugin zip)
+5. Publish to npm: `npm publish`

@@ -96,9 +96,29 @@ init() uses a `processed` Set to avoid double-animating:
 - Click-to-copy on all classes and code examples
 
 ## Publishing
-- **npm**: `npm publish --otp=CODE` (package: fancoolo-fx)
-- **GitHub Release**: push a tag like `1.2.0` → Actions zips plugin files from root → attaches to release
-- **GitHub Pages**: auto-deploys from `docs/` folder
+
+### Release checklist
+1. Bump version in both `package.json` and `fancoolo-fx.php`
+2. Run `npm run sync` to copy `src/fx.js` → `assets/fx.js` + `docs/vendor/fx.js`
+3. Commit and push to main
+4. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
+5. Publish to npm: `npm publish`
+
+### npm (package: fancoolo-fx)
+```bash
+npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
+npm publish
+```
+- Token is stored globally in `~/.npmrc` — set once, reuse across publishes
+- Never commit tokens to the repo or share them in chat
+- Publishes only `src/fx.js`, `package.json`, `README.md` (controlled by `.npmignore`)
+
+### GitHub Release (WP plugin zip)
+- Push a version tag (e.g. `1.4.0`) → Actions workflow zips plugin files from root → attaches to release
+- Can also build locally: `wp dist-archive .` (uses `.distignore`)
+
+### GitHub Pages
+- Auto-deploys from `docs/` folder
 
 ## No build step
 No bundler, no compilation. GSAP + plugins are loaded as separate script tags from `node_modules/gsap/dist/`, then `src/fx.js` runs as a plain IIFE.

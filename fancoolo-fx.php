@@ -27,6 +27,7 @@ function fancoolo_fx_get_settings() {
 		'scroll_once'      => '1',
 		'section_selector' => 'section',
 		'debug_markers'    => '0',
+		'tag_map'          => array(),
 	) );
 }
 
@@ -72,12 +73,22 @@ function fancoolo_fx_enqueue_scripts() {
 
 	// 5. Inject settings as __FX_CONFIG__ before fx.js
 	$s = fancoolo_fx_get_settings();
-	$config_js = sprintf(
-		'window.__FX_CONFIG__ = { scrollStart: %s, scrollOnce: %s, sectionSelector: %s };',
-		wp_json_encode( $s['scroll_start'] ),
-		$s['scroll_once'] ? 'true' : 'false',
-		wp_json_encode( $s['section_selector'] )
+	$config = array(
+		'scrollStart'     => $s['scroll_start'],
+		'scrollOnce'      => (bool) $s['scroll_once'],
+		'sectionSelector' => $s['section_selector'],
 	);
+
+	// Build tagMap object from saved rows: { 'h1,h2': 'textReveal', 'img': 'reveal' }
+	if ( ! empty( $s['tag_map'] ) ) {
+		$tag_map_obj = array();
+		foreach ( $s['tag_map'] as $row ) {
+			$tag_map_obj[ $row['selector'] ] = $row['effect'];
+		}
+		$config['tagMap'] = (object) $tag_map_obj;
+	}
+
+	$config_js = 'window.__FX_CONFIG__ = ' . wp_json_encode( $config ) . ';';
 	wp_add_inline_script( 'fancoolo-fx', $config_js, 'before' );
 
 	// 6. Debug markers (admin only) — must run before fx.js init()
@@ -130,6 +141,23 @@ function fancoolo_fx_admin_enqueue( $hook ) {
 	if ( 'appearance_page_fancoolo-fx' !== $hook ) {
 		return;
 	}
+
+	// Admin CSS
+	wp_enqueue_style(
+		'fancoolo-fx-admin',
+		FANCOOLO_FX_URL . 'assets/admin.css',
+		array(),
+		FANCOOLO_FX_VERSION
+	);
+
+	// Admin JS
+	wp_enqueue_script(
+		'fancoolo-fx-admin',
+		FANCOOLO_FX_URL . 'assets/admin.js',
+		array( 'jquery' ),
+		FANCOOLO_FX_VERSION,
+		true
+	);
 
 	// WordPress built-in CodeMirror
 	$settings = wp_enqueue_code_editor( array( 'type' => 'text/javascript' ) );
@@ -184,11 +212,23 @@ function fancoolo_fx_handle_save() {
 	file_put_contents( $file, $content );
 
 	// Save settings
+	$tag_map = array();
+	if ( ! empty( $_POST['fancoolo_fx_tag_map'] ) && is_array( $_POST['fancoolo_fx_tag_map'] ) ) {
+		foreach ( $_POST['fancoolo_fx_tag_map'] as $row ) {
+			$selector = sanitize_text_field( $row['selector'] ?? '' );
+			$effect   = sanitize_text_field( $row['effect'] ?? '' );
+			if ( $selector !== '' && $effect !== '' ) {
+				$tag_map[] = array( 'selector' => $selector, 'effect' => $effect );
+			}
+		}
+	}
+
 	$settings = array(
 		'scroll_start'     => sanitize_text_field( $_POST['fancoolo_fx_scroll_start'] ?? 'top 85%' ),
 		'scroll_once'      => isset( $_POST['fancoolo_fx_scroll_once'] ) ? '1' : '0',
 		'section_selector' => sanitize_text_field( $_POST['fancoolo_fx_section_selector'] ?? 'section' ),
 		'debug_markers'    => isset( $_POST['fancoolo_fx_debug_markers'] ) ? '1' : '0',
+		'tag_map'          => $tag_map,
 	);
 	update_option( 'fancoolo_fx_settings', $settings );
 
@@ -211,39 +251,7 @@ function fancoolo_fx_render_admin_page() {
 
 	settings_errors( 'fancoolo_fx' );
 	?>
-	<style>
-		.ffx-tabs { display: flex; gap: 0; border-bottom: 1px solid #c3c4c7; margin: 20px 0 0; }
-		.ffx-tab { padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 14px; color: #50575e; border: 1px solid transparent; border-bottom: none; margin-bottom: -1px; background: none; border-radius: 4px 4px 0 0; }
-		.ffx-tab:hover { color: #1d2327; }
-		.ffx-tab.active { background: #fff; border-color: #c3c4c7; color: #1d2327; }
-		.ffx-panel { display: none; background: #fff; border: 1px solid #c3c4c7; border-top: none; padding: 24px; }
-		.ffx-panel.active { display: block; }
-		.ffx-panel-editor { padding: 0; }
-		.ffx-panel-editor form { display: flex; }
-		.ffx-panel-editor .ffx-editor-main { flex: 1; min-width: 0; position: relative; }
-		.ffx-panel-editor .CodeMirror { border: none; }
-		.ffx-save-btn { position: absolute; top: 12px; right: 12px; z-index: 10; }
-		.ffx-sidebar { width: 280px; border-left: 1px solid #c3c4c7; background: #f6f7f7; padding: 16px; flex-shrink: 0; }
-		.ffx-sidebar h3 { font-size: 13px; font-weight: 600; margin: 0 0 12px; color: #1d2327; }
-		.ffx-sidebar label { display: block; font-size: 13px; color: #1d2327; margin-bottom: 4px; font-weight: 500; }
-		.ffx-sidebar input[type="text"] { width: 100%; margin-bottom: 12px; }
-		.ffx-sidebar .ffx-toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-		.ffx-sidebar .ffx-toggle label { margin: 0; font-weight: 400; }
-		.ffx-sidebar .ffx-hint { font-size: 11px; color: #646970; margin: -8px 0 12px; }
-		.ffx-sidebar hr { border: none; border-top: 1px solid #dcdcde; margin: 16px 0; }
-		.ffx-copy-wrap { position: relative; }
-		.ffx-copy-btn { position: absolute; top: 8px; right: 8px; padding: 4px 10px; font-size: 11px; cursor: pointer; background: #3c434a; color: #bbb; border: 1px solid #555; border-radius: 3px; }
-		.ffx-copy-btn:hover { color: #fff; border-color: #888; }
-		.ffx-copy-btn.copied { color: #46b450; border-color: #46b450; }
-		.ffx-pre { background: #23282d; color: #eee; padding: 16px; border-radius: 4px; margin: 0; overflow-x: auto; font-size: 13px; line-height: 1.6; }
-		.ffx-class-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #f0f0f1; }
-		.ffx-class-row:last-child { border-bottom: none; }
-		.ffx-class-row code { background: #f0f0f1; padding: 3px 8px; border-radius: 3px; font-size: 13px; cursor: pointer; transition: background 0.15s; }
-		.ffx-class-row code:hover { background: #2271b1; color: #fff; }
-		.ffx-class-row code.copied { background: #46b450; color: #fff; }
-		.ffx-class-row .ffx-desc { color: #646970; font-size: 13px; }
-		.ffx-group-title { font-weight: 600; font-size: 14px; padding: 12px 0 4px; color: #1d2327; border-bottom: 2px solid #2271b1; margin-bottom: 4px; }
-	</style>
+	<!-- Styles and scripts enqueued via fancoolo_fx_admin_enqueue() -->
 
 	<div class="wrap">
 		<h1>Fancoolo FX</h1>
@@ -301,7 +309,38 @@ function fancoolo_fx_render_admin_page() {
 						<label for="ffx-debug-markers">Debug markers</label>
 					</div>
 					<p class="ffx-hint">Show ScrollTrigger markers (admin only, visitors won't see them)</p>
-				</div>
+
+						<hr>
+
+						<h3>Global Tag Map</h3>
+						<p class="ffx-hint" style="margin-top: -8px;">Auto-animate elements by tag inside sections. No classes needed.</p>
+
+						<div id="ffx-tagmap-rows">
+							<?php foreach ( $s['tag_map'] as $i => $row ) : ?>
+							<div class="ffx-tagmap-row">
+								<input type="text" name="fancoolo_fx_tag_map[<?php echo $i; ?>][selector]" value="<?php echo esc_attr( $row['selector'] ); ?>" placeholder="h1,h2,h3">
+								<select name="fancoolo_fx_tag_map[<?php echo $i; ?>][effect]">
+									<?php foreach ( array(
+										'textReveal' => 'Text Reveal',
+										'reveal'     => 'Reveal',
+										'spinReveal' => 'Spin Reveal',
+										'bgReveal'   => 'BG Reveal',
+										'scaleIn'    => 'Scale In',
+										'fadeIn'     => 'Fade In',
+										'blurIn'     => 'Blur In',
+										'clipUp'     => 'Clip Up',
+										'clipDown'   => 'Clip Down',
+										'tiltIn'     => 'Tilt In',
+									) as $value => $label ) : ?>
+										<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $row['effect'], $value ); ?>><?php echo esc_html( $label ); ?></option>
+									<?php endforeach; ?>
+								</select>
+								<button type="button" class="ffx-tagmap-remove" title="Remove">&times;</button>
+							</div>
+							<?php endforeach; ?>
+						</div>
+						<button type="button" id="ffx-tagmap-add" class="button button-small">+ Add Rule</button>
+					</div>
 			</form>
 		</div>
 
@@ -482,47 +521,6 @@ FX.init();</pre>
 		</p>
 	</div>
 
-	<script>
-	jQuery(function($) {
-		// Fallback copy that works on HTTP (no clipboard API needed)
-		function copyText(text) {
-			var ta = document.createElement('textarea');
-			ta.value = text;
-			ta.style.position = 'fixed';
-			ta.style.opacity = '0';
-			document.body.appendChild(ta);
-			ta.select();
-			document.execCommand('copy');
-			document.body.removeChild(ta);
-		}
-
-		// Tab switching
-		$('.ffx-tab').on('click', function() {
-			var tab = $(this).data('tab');
-			$('.ffx-tab').removeClass('active');
-			$(this).addClass('active');
-			$('.ffx-panel').removeClass('active');
-			$('.ffx-panel[data-panel="' + tab + '"]').addClass('active');
-		});
-
-		// Copy code blocks
-		$('.ffx-copy-btn').on('click', function() {
-			var btn = $(this);
-			var target = $('#' + btn.data('target'));
-			copyText(target.text());
-			btn.text('Copied!').addClass('copied');
-			setTimeout(function() { btn.text('Copy').removeClass('copied'); }, 1500);
-		});
-
-		// Copy class on click
-		$('[data-copy]').on('click', function() {
-			var el = $(this);
-			var original = el.text();
-			copyText(original);
-			el.text('Copied!').addClass('copied');
-			setTimeout(function() { el.text(original).removeClass('copied'); }, 1000);
-		});
-	});
-	</script>
+	<!-- Admin JS enqueued via fancoolo_fx_admin_enqueue() -->
 	<?php
 }
