@@ -6,18 +6,22 @@
  */
 
 import { __ } from '@wordpress/i18n';
+import { useState } from '@wordpress/element';
 import {
 	PanelBody,
 	SelectControl,
 	TextControl,
 	ToggleControl,
+	Button,
 	__experimentalNumberControl as NumberControl,
 	__experimentalToggleGroupControl as ToggleGroupControl,
 	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
 } from '@wordpress/components';
-import { InspectorControls } from '@wordpress/block-editor';
+import { InspectorControls, BlockControls } from '@wordpress/block-editor';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { addFilter } from '@wordpress/hooks';
+import { MenuItem } from '@wordpress/components';
+import { BlockSettingsMenuControls } from '@wordpress/block-editor';
 
 import {
 	parseFxClasses,
@@ -40,6 +44,64 @@ const EASE_OPTIONS = [
 ];
 
 // START_OPTIONS removed — using free text input instead
+
+const STORAGE_KEY = 'fancoolo-fx-clipboard';
+
+function CopyPasteButtons( { parsed, onPaste } ) {
+	const [ copied, setCopied ] = useState( false );
+	const hasClipboard = !! localStorage.getItem( STORAGE_KEY );
+
+	const handleCopy = () => {
+		const data = {
+			effect: parsed.effect,
+			trigger: parsed.trigger,
+			modifiers: parsed.modifiers,
+		};
+		localStorage.setItem( STORAGE_KEY, JSON.stringify( data ) );
+		setCopied( true );
+		setTimeout( () => setCopied( false ), 1500 );
+	};
+
+	const handlePaste = () => {
+		try {
+			const data = JSON.parse( localStorage.getItem( STORAGE_KEY ) );
+			if ( data && data.effect ) {
+				onPaste( data );
+			}
+		} catch ( e ) {
+			// ignore
+		}
+	};
+
+	const hasEffect = !! parsed.effect;
+
+	if ( ! hasEffect && ! hasClipboard ) {
+		return null;
+	}
+
+	return (
+		<div style={ { display: 'flex', gap: '8px', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e0e0e0' } }>
+			{ hasEffect && (
+				<Button
+					variant="secondary"
+					onClick={ handleCopy }
+					style={ { flex: 1, justifyContent: 'center' } }
+				>
+					{ copied ? __( 'Copied!', 'fancoolo-fx' ) : __( 'Copy FX', 'fancoolo-fx' ) }
+				</Button>
+			) }
+			{ hasClipboard && (
+				<Button
+					variant="secondary"
+					onClick={ handlePaste }
+					style={ { flex: 1, justifyContent: 'center' } }
+				>
+					{ __( 'Paste FX', 'fancoolo-fx' ) }
+				</Button>
+			) }
+		</div>
+	);
+}
 
 /**
  * Higher-order component that adds the FX Animation panel.
@@ -188,8 +250,54 @@ const withFxPanel = createHigherOrderComponent( ( BlockEdit ) => {
 								}
 							/>
 						) }
+
+						<CopyPasteButtons
+							parsed={ parsed }
+							onPaste={ ( data ) => {
+								const newClassName = generateFxClasses( { ...data, otherClasses } );
+								setAttributes( { className: newClassName || undefined } );
+							} }
+						/>
 					</PanelBody>
 				</InspectorControls>
+				<BlockSettingsMenuControls>
+					{ ( { onClose } ) => (
+						<>
+							<hr style={ { margin: '6px 0', borderTop: '1px solid #e0e0e0', borderBottom: 'none' } } />
+							{ hasEffect && (
+								<MenuItem
+									onClick={ () => {
+										localStorage.setItem( STORAGE_KEY, JSON.stringify( {
+											effect,
+											trigger,
+											modifiers,
+										} ) );
+										onClose();
+									} }
+								>
+									{ __( 'Copy FX animation', 'fancoolo-fx' ) }
+								</MenuItem>
+							) }
+							{ !! localStorage.getItem( STORAGE_KEY ) && (
+								<MenuItem
+									onClick={ () => {
+										try {
+											const data = JSON.parse( localStorage.getItem( STORAGE_KEY ) );
+											if ( data && data.effect ) {
+												const newClassName = generateFxClasses( { ...data, otherClasses } );
+												setAttributes( { className: newClassName || undefined } );
+											}
+										} catch ( e ) { /* ignore */ }
+										onClose();
+									} }
+								>
+									{ __( 'Paste FX animation', 'fancoolo-fx' ) }
+								</MenuItem>
+							) }
+							<hr style={ { margin: '6px 0', borderTop: '1px solid #e0e0e0', borderBottom: 'none' } } />
+						</>
+					) }
+				</BlockSettingsMenuControls>
 			</>
 		);
 	};
