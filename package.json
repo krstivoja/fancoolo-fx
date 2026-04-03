@@ -14,8 +14,8 @@
   "keywords": ["gsap", "animation", "scrolltrigger", "splittext", "wordpress", "gutenberg"],
   "author": "Fancoolo",
   "scripts": {
-    "sync": "cp src/fx.js assets/fx.js && cp src/fx.js docs/vendor/fx.js",
-    "build": "wp-scripts build src/editor/index.js --output-path=assets/editor",
+    "sync": "cp src/fx.js assets/fx.js && cp src/fx.js docs/vendor/fx.js && cp node_modules/gsap/dist/gsap.min.js assets/gsap.min.js && cp node_modules/gsap/dist/ScrollTrigger.min.js assets/ScrollTrigger.min.js && cp node_modules/gsap/dist/SplitText.min.js assets/SplitText.min.js && cp node_modules/gsap/dist/gsap.min.js docs/vendor/gsap.min.js && cp node_modules/gsap/dist/ScrollTrigger.min.js docs/vendor/ScrollTrigger.min.js && cp node_modules/gsap/dist/SplitText.min.js docs/vendor/SplitText.min.js",
+    "build": "wp-scripts build src/editor/index.js --output-path=assets/editor && npm run sync",
     "start": "wp-scripts start src/editor/index.js --output-path=assets/editor"
   },
   "license": "ISC",
