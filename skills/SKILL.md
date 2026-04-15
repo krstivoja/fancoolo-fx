@@ -134,6 +134,7 @@ FX.spinReveal(el, { rotation: -45, scale: 0.8 });
 FX.scaleIn(el, { trigger: 'scroll', scale: 0.85 });
 FX.bgReveal(el);
 FX.init(); // Re-scan DOM
+FX.refresh(); // Re-split text after layout change
 FX.typeWriter(el, { trigger: 'scroll' });
 FX.drawSVG(svgEl, { trigger: 'scroll' });
 FX.parallax(el, { y: 80 });
@@ -142,6 +143,10 @@ FX.slideIn(el, { direction: 'left', trigger: 'scroll' });
 ```
 
 Set `trigger: 'scroll'` to enable ScrollTrigger. Pass `scrollTrigger: { trigger: someEl }` to use a different trigger element.
+
+## Resize Handling
+
+Text-based effects (`textReveal`, `typeWriter`, `splitWords`) automatically re-split when the browser width changes. One-shot animations revert SplitText on completion so text reflows naturally. Pending scroll-triggered animations are reverted and re-created with correct line breaks. Call `FX.refresh()` manually after layout changes that don't involve a resize (sidebar toggle, font load).
 
 ## Auto-stagger
 

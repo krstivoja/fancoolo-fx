@@ -62,6 +62,9 @@ A class-driven GSAP animation wrapper for WordPress and static sites. Users add 
 ### Pre-configuration
 Set `window.__FX_CONFIG__` before the FX script loads to configure all options without needing JS after load.
 
+### Resize handling
+Text-based effects (`textReveal`, `typeWriter`, `splitWords`) track their SplitText instances in a `_splitRegistry`. On browser width change (debounced 200ms), pending animations are reverted and re-created with correct line breaks. One-shot animations revert SplitText on completion so text reflows naturally. `FX.refresh()` triggers this manually.
+
 ### Auto-stagger
 Elements with the same `.fx-*` class grouped under the same parent are staggered automatically (0.15s gap).
 

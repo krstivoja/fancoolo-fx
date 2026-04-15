@@ -159,6 +159,16 @@ All functions accept `(element, options)`:
 
 Set `trigger: 'scroll'` to enable ScrollTrigger. Pass `scrollTrigger: { trigger: someEl }` to use a different trigger element.
 
+### Utility Methods
+
+| Method | Description |
+|--------|-------------|
+| `FX.init()` | Re-scan DOM and apply animations (for dynamic content) |
+| `FX.refresh()` | Re-split text after layout change (sidebar toggle, font load) |
+| `FX.config` | Global config object |
+
+**Resize handling:** Text-based effects (`textReveal`, `typeWriter`, `splitWords`) automatically re-split when the browser width changes. After one-shot animations complete, the SplitText DOM is reverted so text reflows naturally.
+
 ## Using in a New Project
 
 1. Copy this repo (or `npm install`)

@@ -24,6 +24,7 @@ When `fx.js` loads, it creates a `window.FX` object with these methods:
 | `FX.splitWords(el, opts)` | Word-by-word fade and slide up |
 | `FX.slideIn(el, opts)` | Horizontal slide from left or right |
 | `FX.init()` | Re-scan DOM and apply animations |
+| `FX.refresh()` | Re-split text after resize or layout change |
 | `FX.config` | Global config object |
 
 ## Basic Usage
@@ -137,6 +138,20 @@ function onNewContent() {
     // Or re-run full initialization
     FX.init();
 }
+```
+
+## Resize Handling
+
+FX automatically handles browser resize for text-based effects (`textReveal`, `typeWriter`, `splitWords`). When the browser width changes:
+
+- **Completed one-shot animations** — SplitText is reverted on completion, so text reflows naturally with no extra work
+- **Pending scroll-triggered animations** — FX reverts the split and re-creates the animation with correct line breaks
+
+This is fully automatic. You can also trigger it manually:
+
+```js
+// Force re-split after a layout change (e.g. sidebar toggle, font load)
+FX.refresh();
 ```
 
 ## Staggered Groups

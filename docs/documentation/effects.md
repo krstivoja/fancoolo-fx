@@ -59,7 +59,9 @@ Splits text into lines using GSAP's SplitText, wraps each line in an `overflow: 
 2. Each line gets wrapped in a `<div>` with `overflow: hidden`
 3. GSAP animates each line from `y: 100%` (below the mask) to `y: 0`
 4. Lines are staggered by 0.1s by default
-5. After completion, inline transforms are cleaned up
+5. After completion, the SplitText is reverted — text returns to normal DOM and reflows naturally on resize
+
+**Resize handling:** FX automatically re-splits text when the browser width changes. For one-shot animations that have already played, the SplitText DOM is reverted on completion so text reflows naturally. For pending scroll-triggered animations, FX reverts and re-creates the split on resize so line breaks are always correct.
 
 ---
 
@@ -418,7 +420,7 @@ Reveals text character by character using GSAP's SplitText, simulating a typewri
 2. All characters start invisible (`opacity: 0`)
 3. GSAP staggers each character to `opacity: 1` with `ease: "none"` for a sharp on/off reveal
 4. The stagger timing (0.03s) controls the typing speed
-5. After completion, inline styles are cleaned up
+5. After completion, the SplitText is reverted — text returns to normal DOM
 
 **JS override:** Control the typing speed:
 ```js
@@ -520,7 +522,7 @@ Splits text into individual words using GSAP's SplitText, then fades and slides 
 2. Each word starts at `opacity: 0` and `y: 20px` (below its final position)
 3. GSAP staggers each word to `opacity: 1` and `y: 0`
 4. The stagger timing (0.05s) creates a smooth wave effect across the text
-5. After completion, inline transforms are cleaned up
+5. After completion, the SplitText is reverted — text returns to normal DOM
 
 **JS override:** Control the stagger and slide distance:
 ```js

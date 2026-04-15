@@ -440,6 +440,11 @@ FX.config.excludeSelectors = '.wp-block-navigation';
 
 // Re-scan the DOM with new config
 FX.init();
+
+// Force re-split of text effects (after layout changes, font loads, etc.)
+FX.refresh();
 ```
 
 **Note:** `FX.init()` does not skip previously animated elements when called again. Use this for dynamically added content, not for re-animating existing elements.
+
+**Note:** `FX.refresh()` is called automatically on browser width changes. Call it manually only when you need to re-split text after a layout change that doesn't involve a resize (e.g. toggling a sidebar, loading custom fonts).

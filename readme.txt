@@ -68,6 +68,12 @@ Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the
 
 == Changelog ==
 
+= 1.7.0 =
+* Fix: Text-based effects (textReveal, typeWriter, splitWords) now re-split on browser resize — line breaks stay correct at every viewport width
+* New: SplitText is reverted after one-shot animations complete — text reflows naturally without extra DOM wrappers
+* New: FX.refresh() public method — manually re-split text after layout changes (sidebar toggle, font load)
+* New: Automatic debounced resize handler (200ms, width-only) for pending scroll-triggered text animations
+
 = 1.0.0 =
 * Initial release
 * 5 animation effects

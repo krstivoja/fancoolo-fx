@@ -157,6 +157,49 @@
         return st;
     }
 
+    // ── SplitText resize handling ───────────────
+
+    var _splitRegistry = [];
+    var _lastWidth = window.innerWidth;
+    var _resizeTimer;
+
+    function registerSplit(entry) {
+        _splitRegistry.push(entry);
+    }
+
+    function unregisterSplit(entry) {
+        var idx = _splitRegistry.indexOf(entry);
+        if (idx > -1) _splitRegistry.splice(idx, 1);
+    }
+
+    function refreshSplits() {
+        if (_splitRegistry.length === 0) return;
+
+        var pending = [];
+
+        for (var i = _splitRegistry.length - 1; i >= 0; i--) {
+            var entry = _splitRegistry[i];
+            if (entry.tween) entry.tween.kill();
+            if (entry.split) entry.split.revert();
+            pending.push(entry);
+        }
+
+        _splitRegistry.length = 0;
+
+        pending.forEach(function (entry) {
+            entry.effectFn(entry.el, entry.opts);
+        });
+
+        ScrollTrigger.refresh();
+    }
+
+    window.addEventListener('resize', function () {
+        if (window.innerWidth === _lastWidth) return;
+        _lastWidth = window.innerWidth;
+        clearTimeout(_resizeTimer);
+        _resizeTimer = setTimeout(refreshSplits, 200);
+    });
+
     // ── Effects ──────────────────────────────────
 
     function textReveal(el, opts) {
@@ -172,6 +215,9 @@
             wrapper.appendChild(line);
         });
 
+        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
+        var entry = { el: el, split: split, tween: null, effectFn: textReveal, opts: opts };
+
         var tweenVars = {
             y: '100%',
             opacity: 0,
@@ -179,19 +225,21 @@
             ease: o.ease,
             stagger: o.stagger,
             delay: o.delay,
-            onComplete: function () {
-                split.lines.forEach(function (line) {
-                    line.style.transform = '';
-                    line.style.opacity = '';
-                });
-            },
         };
+
+        if (isOneShot) {
+            tweenVars.onComplete = function () {
+                split.revert();
+                unregisterSplit(entry);
+            };
+        }
 
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
 
-        gsap.from(split.lines, tweenVars);
+        entry.tween = gsap.from(split.lines, tweenVars);
+        registerSplit(entry);
     }
 
     function reveal(el, opts) {
@@ -377,6 +425,9 @@
         var split = new SplitText(el, { type: 'chars' });
         gsap.set(split.chars, { opacity: 0 });
 
+        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
+        var entry = { el: el, split: split, tween: null, effectFn: typeWriter, opts: opts };
+
         var tweenVars = {
             opacity: 1,
             duration: o.duration,
@@ -385,11 +436,19 @@
             delay: o.delay,
         };
 
+        if (isOneShot) {
+            tweenVars.onComplete = function () {
+                split.revert();
+                unregisterSplit(entry);
+            };
+        }
+
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
 
-        gsap.to(split.chars, tweenVars);
+        entry.tween = gsap.to(split.chars, tweenVars);
+        registerSplit(entry);
     }
 
     function drawSVG(el, opts) {
@@ -464,6 +523,9 @@
 
         var split = new SplitText(el, { type: 'words' });
 
+        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
+        var entry = { el: el, split: split, tween: null, effectFn: splitWords, opts: opts };
+
         var tweenVars = {
             y: opts.y != null ? opts.y : 30,
             opacity: 0,
@@ -473,11 +535,19 @@
             delay: o.delay,
         };
 
+        if (isOneShot) {
+            tweenVars.onComplete = function () {
+                split.revert();
+                unregisterSplit(entry);
+            };
+        }
+
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
 
-        gsap.from(split.words, tweenVars);
+        entry.tween = gsap.from(split.words, tweenVars);
+        registerSplit(entry);
     }
 
     function slideIn(el, opts) {
@@ -774,5 +844,6 @@
         splitWords: splitWords,
         slideIn: slideIn,
         init: init,
+        refresh: refreshSplits,
     };
 })();
