@@ -1,10 +1,12 @@
 fancoolo-fx.php
 readme.txt
 assets/
+inc/
 src/editor/
 docs/
 skills/
 .claude/
 .github/
+.distignore
 .nojekyll
 CLAUDE.md
