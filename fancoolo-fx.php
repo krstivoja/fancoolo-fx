@@ -5,7 +5,7 @@
  * Description:       A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations — no JavaScript needed.
  * Requires at least: 6.3.0
  * Requires PHP:      7.4
- * Version:           1.7.0
+ * Version:           1.7.1
  * Author:            devusrmk
  * Author URI:        https://github.com/krstivoja
  * License:           GPL-2.0-or-later
@@ -44,6 +44,7 @@ require_once FANCOOLOFX_PATH . 'inc/SaveHandler.php';
 require_once FANCOOLOFX_PATH . 'inc/update.php';
 
 // Wire hooks.
+add_action( 'wp_head', array( FancooloFX\Frontend::class, 'inline_css' ), 1 );
 add_action( 'wp_enqueue_scripts', array( FancooloFX\Frontend::class, 'enqueue' ) );
 add_action( 'enqueue_block_editor_assets', array( FancooloFX\Editor::class, 'enqueue' ) );
 add_action( 'admin_menu', array( FancooloFX\Admin::class, 'register_menu' ) );

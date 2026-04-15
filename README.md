@@ -169,11 +169,36 @@ Set `trigger: 'scroll'` to enable ScrollTrigger. Pass `scrollTrigger: { trigger:
 
 **Resize handling:** Text-based effects (`textReveal`, `typeWriter`, `splitWords`) automatically re-split when the browser width changes. After one-shot animations complete, the SplitText DOM is reverted so text reflows naturally.
 
+## Preventing Flash of Unstyled Content (FOUC)
+
+FX uses GSAP's `autoAlpha` internally, so elements with `visibility: hidden` are revealed automatically when their animation starts. Add this CSS **before** any content renders to prevent the flash where elements appear briefly before JS loads:
+
+```css
+.fx-text-reveal-pl,.fx-text-reveal-st,.fx-text-reveal,
+.fx-reveal-pl,.fx-reveal-st,.fx-reveal,
+.fx-spin-reveal-pl,.fx-spin-reveal-st,.fx-spin-reveal,
+.fx-bg-reveal-pl,.fx-bg-reveal-st,.fx-bg-reveal,
+.fx-scale-in-pl,.fx-scale-in-st,.fx-scale-in,
+.fx-fade-in-pl,.fx-fade-in-st,.fx-fade-in,
+.fx-blur-in-pl,.fx-blur-in-st,.fx-blur-in,
+.fx-clip-up-pl,.fx-clip-up-st,.fx-clip-up,
+.fx-clip-down-pl,.fx-clip-down-st,.fx-clip-down,
+.fx-tilt-in-st,.fx-tilt-in,
+.fx-type-writer-pl,.fx-type-writer-st,.fx-type-writer,
+.fx-draw-svg-pl,.fx-draw-svg-st,.fx-draw-svg,.fx-draw-svg-scrub,
+.fx-split-words-pl,.fx-split-words-st,.fx-split-words,
+.fx-slide-left-pl,.fx-slide-left-st,.fx-slide-left,
+.fx-slide-right-pl,.fx-slide-right-st,.fx-slide-right{visibility:hidden}
+```
+
+**WordPress:** The plugin injects this CSS automatically in the `<head>` — no action needed.
+
 ## Using in a New Project
 
 1. Copy this repo (or `npm install`)
 2. Add the 4 script tags (gsap, ScrollTrigger, SplitText, fx.js)
-3. Add `.fx-*` classes in your HTML
+3. Add the FOUC prevention CSS in your `<head>` (see above)
+4. Add `.fx-*` classes in your HTML
 
 For compound sequences, create a project-specific JS file loaded after fx.js:
 

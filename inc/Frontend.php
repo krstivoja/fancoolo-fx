@@ -8,6 +8,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Frontend {
 
+	public static function inline_css() {
+		?>
+		<style>
+		.fx-text-reveal-pl,.fx-text-reveal-st,.fx-text-reveal,
+		.fx-reveal-pl,.fx-reveal-st,.fx-reveal,
+		.fx-spin-reveal-pl,.fx-spin-reveal-st,.fx-spin-reveal,
+		.fx-bg-reveal-pl,.fx-bg-reveal-st,.fx-bg-reveal,
+		.fx-scale-in-pl,.fx-scale-in-st,.fx-scale-in,
+		.fx-fade-in-pl,.fx-fade-in-st,.fx-fade-in,
+		.fx-blur-in-pl,.fx-blur-in-st,.fx-blur-in,
+		.fx-clip-up-pl,.fx-clip-up-st,.fx-clip-up,
+		.fx-clip-down-pl,.fx-clip-down-st,.fx-clip-down,
+		.fx-tilt-in-st,.fx-tilt-in,
+		.fx-type-writer-pl,.fx-type-writer-st,.fx-type-writer,
+		.fx-draw-svg-pl,.fx-draw-svg-st,.fx-draw-svg,.fx-draw-svg-scrub,
+		.fx-split-words-pl,.fx-split-words-st,.fx-split-words,
+		.fx-slide-left-pl,.fx-slide-left-st,.fx-slide-left,
+		.fx-slide-right-pl,.fx-slide-right-st,.fx-slide-right{visibility:hidden}
+		</style>
+		<?php
+	}
+
 	public static function enqueue() {
 		wp_enqueue_script( 'gsap', FANCOOLO_FX_URL . 'assets/gsap.min.js', array(), '3.14.2', true );
 		wp_enqueue_script( 'gsap-scrolltrigger', FANCOOLO_FX_URL . 'assets/ScrollTrigger.min.js', array( 'gsap' ), '3.14.2', true );

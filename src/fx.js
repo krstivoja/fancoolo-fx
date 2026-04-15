@@ -206,6 +206,7 @@
         opts = opts || {};
         var o = resolveOptions(el, 'textReveal', opts);
 
+        gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'lines', linesClass: 'line-wrapper' });
 
         split.lines.forEach(function (line) {
@@ -220,7 +221,7 @@
 
         var tweenVars = {
             y: '100%',
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             stagger: o.stagger,
@@ -248,7 +249,7 @@
 
         var tweenVars = {
             y: opts.y != null ? opts.y : 80,
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -268,7 +269,7 @@
         var tweenVars = {
             rotation: opts.rotation != null ? opts.rotation : -30,
             scale: opts.scale != null ? opts.scale : 0.9,
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -287,7 +288,7 @@
 
         var tweenVars = {
             y: '100%',
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -306,7 +307,7 @@
 
         var tweenVars = {
             scale: opts.scale != null ? opts.scale : 0.92,
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -324,7 +325,7 @@
         var o = resolveOptions(el, 'fadeIn', opts);
 
         var tweenVars = {
-            opacity: 0,
+            autoAlpha: 0,
             scale: opts.scale != null ? opts.scale : 0.95,
             duration: o.duration,
             ease: o.ease,
@@ -344,7 +345,7 @@
 
         var tweenVars = {
             filter: 'blur(' + (opts.blur != null ? opts.blur : 12) + 'px)',
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -363,6 +364,7 @@
 
         var tweenVars = {
             clipPath: 'inset(100% 0 0 0)',
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -381,6 +383,7 @@
 
         var tweenVars = {
             clipPath: 'inset(0 0 100% 0)',
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,
@@ -400,13 +403,13 @@
         gsap.fromTo(el, {
             rotationX: opts.rotationX != null ? opts.rotationX : 45,
             scale: opts.scale != null ? opts.scale : 0.8,
-            opacity: opts.opacity != null ? opts.opacity : 0,
+            autoAlpha: opts.opacity != null ? opts.opacity : 0,
             transformPerspective: opts.perspective != null ? opts.perspective : 1000,
             transformOrigin: opts.transformOrigin || 'center bottom',
         }, {
             rotationX: 0,
             scale: 1,
-            opacity: 1,
+            autoAlpha: 1,
             transformPerspective: 1000,
             ease: o.ease,
             scrollTrigger: {
@@ -422,14 +425,15 @@
         opts = opts || {};
         var o = resolveOptions(el, 'typeWriter', opts);
 
+        gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'chars' });
-        gsap.set(split.chars, { opacity: 0 });
+        gsap.set(split.chars, { autoAlpha: 0 });
 
         var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
         var entry = { el: el, split: split, tween: null, effectFn: typeWriter, opts: opts };
 
         var tweenVars = {
-            opacity: 1,
+            autoAlpha: 1,
             duration: o.duration,
             ease: o.ease,
             stagger: o.stagger,
@@ -454,6 +458,7 @@
     function drawSVG(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'drawSVG', opts);
+        gsap.set(el, { visibility: 'inherit' });
 
         var paths = el.tagName === 'path' || el.tagName === 'line' || el.tagName === 'circle' || el.tagName === 'polyline'
             ? [el]
@@ -521,6 +526,7 @@
         opts = opts || {};
         var o = resolveOptions(el, 'splitWords', opts);
 
+        gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'words' });
 
         var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
@@ -528,7 +534,7 @@
 
         var tweenVars = {
             y: opts.y != null ? opts.y : 30,
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             stagger: o.stagger,
@@ -558,7 +564,7 @@
 
         var tweenVars = {
             x: direction === 'left' ? -xVal : xVal,
-            opacity: 0,
+            autoAlpha: 0,
             duration: o.duration,
             ease: o.ease,
             delay: o.delay,

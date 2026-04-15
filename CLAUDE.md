@@ -138,6 +138,13 @@ npm publish
 ## No build step
 No bundler, no compilation. GSAP + plugins are loaded as separate script tags from `node_modules/gsap/dist/`, then `src/fx.js` runs as a plain IIFE.
 
+## FOUC prevention
+- All effects use `autoAlpha` instead of `opacity` — GSAP combines opacity + visibility
+- CSS `visibility: hidden` is applied to all `.fx-*` classes early in `<head>`
+- WordPress: injected automatically via `Frontend::inline_css()` hooked to `wp_head` priority 1
+- Non-WP: users must add the CSS manually (documented in installation.md and README.md)
+- Text-based effects (textReveal, typeWriter, splitWords) set parent `visibility: inherit` before animating children
+
 ## Key decisions
 - **No build step**: plain script tags in the correct order — simpler to maintain, debug, and integrate with WordPress `wp_enqueue_script`
 - **CSS classes over data attributes**: Gutenberg block editor only exposes "Additional CSS classes" field

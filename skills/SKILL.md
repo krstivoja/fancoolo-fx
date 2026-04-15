@@ -197,6 +197,12 @@ All sidebar settings are injected as `window.__FX_CONFIG__` before fx.js loads.
 4. Add to `effectsByName` for tagMap lookups
 5. Add to `window.FX`
 
+## FOUC Prevention
+
+All effects use `autoAlpha` instead of `opacity` — GSAP's `autoAlpha` combines `opacity` and `visibility`, so elements with CSS `visibility: hidden` are revealed automatically when their animation starts. The WordPress plugin injects `visibility: hidden` CSS in the `<head>` for all `.fx-*` classes. Non-WP users must add this CSS manually (see installation docs).
+
+For text-based effects (textReveal, typeWriter, splitWords), the parent element's visibility is set to `inherit` before animating children, so the split targets start hidden via `autoAlpha: 0` while the container becomes visible.
+
 ## Key Architecture Decisions
 
 - **No build step**: plain script tags — simpler for WordPress `wp_enqueue_script`

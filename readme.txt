@@ -68,6 +68,12 @@ Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the
 
 == Changelog ==
 
+= 1.7.1 =
+* Fix: FOUC prevention — all effects now use autoAlpha instead of opacity, elements start with visibility:hidden and are revealed by GSAP
+* New: WordPress plugin injects visibility:hidden CSS automatically in the head
+* New: Text-based effects set parent visibility before animating children to prevent flash
+* Enhancement: clipUp/clipDown now include autoAlpha for consistent FOUC handling
+
 = 1.7.0 =
 * Fix: Text-based effects (textReveal, typeWriter, splitWords) now re-split on browser resize — line breaks stay correct at every viewport width
 * New: SplitText is reverted after one-shot animations complete — text reflows naturally without extra DOM wrappers

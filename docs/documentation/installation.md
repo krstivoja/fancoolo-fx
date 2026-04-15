@@ -32,7 +32,33 @@ Load the scripts in this exact order — GSAP core first, then plugins, then FX:
 
 **Order matters.** GSAP core must load before the plugins, and all three must load before `fx.js`.
 
-## Step 3: Add classes to your HTML
+## Step 3: Add FOUC prevention CSS
+
+Add this CSS in your `<head>` to prevent elements from flashing before JavaScript loads. FX uses GSAP's `autoAlpha` to reveal them automatically when their animation starts:
+
+```html
+<style>
+.fx-text-reveal-pl,.fx-text-reveal-st,.fx-text-reveal,
+.fx-reveal-pl,.fx-reveal-st,.fx-reveal,
+.fx-spin-reveal-pl,.fx-spin-reveal-st,.fx-spin-reveal,
+.fx-bg-reveal-pl,.fx-bg-reveal-st,.fx-bg-reveal,
+.fx-scale-in-pl,.fx-scale-in-st,.fx-scale-in,
+.fx-fade-in-pl,.fx-fade-in-st,.fx-fade-in,
+.fx-blur-in-pl,.fx-blur-in-st,.fx-blur-in,
+.fx-clip-up-pl,.fx-clip-up-st,.fx-clip-up,
+.fx-clip-down-pl,.fx-clip-down-st,.fx-clip-down,
+.fx-tilt-in-st,.fx-tilt-in,
+.fx-type-writer-pl,.fx-type-writer-st,.fx-type-writer,
+.fx-draw-svg-pl,.fx-draw-svg-st,.fx-draw-svg,.fx-draw-svg-scrub,
+.fx-split-words-pl,.fx-split-words-st,.fx-split-words,
+.fx-slide-left-pl,.fx-slide-left-st,.fx-slide-left,
+.fx-slide-right-pl,.fx-slide-right-st,.fx-slide-right{visibility:hidden}
+</style>
+```
+
+**WordPress users:** The plugin injects this CSS automatically — skip this step.
+
+## Step 4: Add classes to your HTML
 
 ```html
 <h1 class="fx-text-reveal-pl">This animates on page load</h1>
