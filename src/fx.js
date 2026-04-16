@@ -168,7 +168,6 @@
         opts = opts || {};
         var o = resolveOptions(el, 'textReveal', opts);
         var isScroll = opts.trigger === 'scroll' || opts.scrollTrigger;
-        var isOneShot = !isScroll || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
 
@@ -185,12 +184,6 @@
                     stagger: o.stagger,
                     delay: o.delay,
                 };
-
-                if (isOneShot) {
-                    tweenVars.onComplete = function () {
-                        self.revert();
-                    };
-                }
 
                 if (isScroll) {
                     tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
@@ -382,7 +375,6 @@
     function typeWriter(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'typeWriter', opts);
-        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'chars' });
@@ -395,12 +387,6 @@
             stagger: o.stagger,
             delay: o.delay,
         };
-
-        if (isOneShot) {
-            tweenVars.onComplete = function () {
-                split.revert();
-            };
-        }
 
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
@@ -479,7 +465,6 @@
     function splitWords(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'splitWords', opts);
-        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'words' });
@@ -492,12 +477,6 @@
             stagger: o.stagger,
             delay: o.delay,
         };
-
-        if (isOneShot) {
-            tweenVars.onComplete = function () {
-                split.revert();
-            };
-        }
 
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});

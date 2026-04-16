@@ -68,6 +68,10 @@ Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the
 
 == Changelog ==
 
+= 1.8.1 =
+* Fix: Removed split.revert() calls from textReveal, typeWriter, and splitWords — revert destroys JS state (event listeners, injected DOM) added after SplitText ran
+* Fix: textReveal resize re-splitting fully handled by autoSplit, no manual revert needed
+
 = 1.8.0 =
 * Refactor: textReveal uses native SplitText `autoSplit`, `mask: "lines"`, and `onSplit` — removes manual overflow wrappers and resize handler
 * Refactor: Responsive and reduced-motion handling via `gsap.matchMedia()` — animations auto-revert when conditions change
