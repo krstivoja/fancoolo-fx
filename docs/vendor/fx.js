@@ -164,14 +164,8 @@
 
     // ── Effects ──────────────────────────────────
 
-    function textReveal(el, opts) {
-        opts = opts || {};
-        var o = resolveOptions(el, 'textReveal', opts);
-        var isScroll = opts.trigger === 'scroll' || opts.scrollTrigger;
-
-        gsap.set(el, { visibility: 'inherit' });
-
-        SplitText.create(el, {
+    function splitTextReveal(target, o, isScroll, triggerEl, opts) {
+        SplitText.create(target, {
             type: 'lines',
             mask: 'lines',
             autoSplit: true,
@@ -186,12 +180,52 @@
                 };
 
                 if (isScroll) {
-                    tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
+                    tweenVars.scrollTrigger = buildScrollTrigger(triggerEl, opts.scrollTrigger || {});
                 }
 
                 return gsap.from(self.lines, tweenVars);
             },
         });
+    }
+
+    // Block-level tags whose presence signals a container with interactive children.
+    // When these are found as direct children, SplitText is applied only to
+    // text-bearing siblings to avoid restructuring interactive widgets.
+    var CONTAINER_CHILD_TAGS = /^(DIV|SECTION|ARTICLE|ASIDE|NAV|HEADER|FOOTER|MAIN|FORM|TABLE|DETAILS|FIELDSET)$/;
+    var TEXT_CHILD_TAGS = /^(H[1-6]|P|BLOCKQUOTE|FIGCAPTION|PRE|LABEL)$/;
+
+    function textReveal(el, opts) {
+        opts = opts || {};
+        var o = resolveOptions(el, 'textReveal', opts);
+        var isScroll = opts.trigger === 'scroll' || opts.scrollTrigger;
+
+        gsap.set(el, { visibility: 'inherit' });
+
+        // If the element contains block-level children (divs, sections, etc.),
+        // only split text-bearing children to avoid breaking interactive widgets
+        // like accordions, tabs, or sliders inside the same container.
+        var hasBlockChild = false;
+        for (var c = 0; c < el.children.length; c++) {
+            if (CONTAINER_CHILD_TAGS.test(el.children[c].tagName)) {
+                hasBlockChild = true;
+                break;
+            }
+        }
+
+        if (hasBlockChild) {
+            var targets = [];
+            for (var t = 0; t < el.children.length; t++) {
+                if (TEXT_CHILD_TAGS.test(el.children[t].tagName)) {
+                    targets.push(el.children[t]);
+                }
+            }
+            targets.forEach(function (textEl) {
+                splitTextReveal(textEl, o, isScroll, el, opts);
+            });
+            return;
+        }
+
+        splitTextReveal(el, o, isScroll, el, opts);
     }
 
     function reveal(el, opts) {
