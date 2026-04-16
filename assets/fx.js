@@ -821,7 +821,12 @@
             return;
         }
 
-        init();
+        // Wait for fonts so SplitText measures correct line breaks
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(function () { init(); });
+        } else {
+            init();
+        }
     }
 
     if (document.readyState === 'loading') {
