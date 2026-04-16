@@ -188,10 +188,7 @@
 
                 if (isOneShot) {
                     tweenVars.onComplete = function () {
-                        // Don't call self.revert() — it restores the element's
-                        // original innerHTML, destroying any JS state (event listeners,
-                        // injected DOM) added by other scripts after SplitText ran.
-                        // Resize re-splitting is handled by autoSplit.
+                        self.revert();
                     };
                 }
 
@@ -399,6 +396,12 @@
             delay: o.delay,
         };
 
+        if (isOneShot) {
+            tweenVars.onComplete = function () {
+                split.revert();
+            };
+        }
+
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
@@ -489,6 +492,12 @@
             stagger: o.stagger,
             delay: o.delay,
         };
+
+        if (isOneShot) {
+            tweenVars.onComplete = function () {
+                split.revert();
+            };
+        }
 
         if (opts.trigger === 'scroll' || opts.scrollTrigger) {
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
