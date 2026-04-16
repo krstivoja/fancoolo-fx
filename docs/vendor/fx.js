@@ -109,6 +109,11 @@
         slideIn:     { duration: 1,   ease: 'power3.out' },
     };
 
+    // ── State ───────────────────────────────────
+
+    var _animated = new WeakSet();
+    var _mm = gsap.matchMedia();
+
     // ── Helpers ──────────────────────────────────
 
     function getClassModifier(el, name, fallback) {
@@ -157,90 +162,43 @@
         return st;
     }
 
-    // ── SplitText resize handling ───────────────
-
-    var _splitRegistry = [];
-    var _lastWidth = window.innerWidth;
-    var _resizeTimer;
-
-    function registerSplit(entry) {
-        _splitRegistry.push(entry);
-    }
-
-    function unregisterSplit(entry) {
-        var idx = _splitRegistry.indexOf(entry);
-        if (idx > -1) _splitRegistry.splice(idx, 1);
-    }
-
-    function refreshSplits() {
-        if (_splitRegistry.length === 0) return;
-
-        var pending = [];
-
-        for (var i = _splitRegistry.length - 1; i >= 0; i--) {
-            var entry = _splitRegistry[i];
-            if (entry.tween) entry.tween.kill();
-            if (entry.split) entry.split.revert();
-            pending.push(entry);
-        }
-
-        _splitRegistry.length = 0;
-
-        pending.forEach(function (entry) {
-            entry.effectFn(entry.el, entry.opts);
-        });
-
-        ScrollTrigger.refresh();
-    }
-
-    window.addEventListener('resize', function () {
-        if (window.innerWidth === _lastWidth) return;
-        _lastWidth = window.innerWidth;
-        clearTimeout(_resizeTimer);
-        _resizeTimer = setTimeout(refreshSplits, 200);
-    });
-
     // ── Effects ──────────────────────────────────
 
     function textReveal(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'textReveal', opts);
+        var isScroll = opts.trigger === 'scroll' || opts.scrollTrigger;
+        var isOneShot = !isScroll || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
-        var split = new SplitText(el, { type: 'lines', linesClass: 'line-wrapper' });
 
-        split.lines.forEach(function (line) {
-            var wrapper = document.createElement('div');
-            wrapper.style.overflow = 'hidden';
-            line.parentNode.insertBefore(wrapper, line);
-            wrapper.appendChild(line);
+        SplitText.create(el, {
+            type: 'lines',
+            mask: 'lines',
+            autoSplit: true,
+            onSplit: function (self) {
+                var tweenVars = {
+                    y: '100%',
+                    autoAlpha: 0,
+                    duration: o.duration,
+                    ease: o.ease,
+                    stagger: o.stagger,
+                    delay: o.delay,
+                };
+
+                if (isOneShot) {
+                    tweenVars.onComplete = function () {
+                        self.revert();
+                    };
+                }
+
+                if (isScroll) {
+                    tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
+                }
+
+                return gsap.from(self.lines, tweenVars);
+            },
         });
-
-        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
-        var entry = { el: el, split: split, tween: null, effectFn: textReveal, opts: opts };
-
-        var tweenVars = {
-            y: '100%',
-            autoAlpha: 0,
-            duration: o.duration,
-            ease: o.ease,
-            stagger: o.stagger,
-            delay: o.delay,
-        };
-
-        if (isOneShot) {
-            tweenVars.onComplete = function () {
-                split.revert();
-                unregisterSplit(entry);
-            };
-        }
-
-        if (opts.trigger === 'scroll' || opts.scrollTrigger) {
-            tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
-        }
-
-        entry.tween = gsap.from(split.lines, tweenVars);
-        registerSplit(entry);
     }
 
     function reveal(el, opts) {
@@ -400,6 +358,11 @@
         opts = opts || {};
         var o = resolveOptions(el, 'tiltIn', opts);
 
+        var st = buildScrollTrigger(el, opts.scrollTrigger || {});
+        st.end = opts.end || 'top 20%';
+        st.scrub = opts.scrub != null ? opts.scrub : 0.6;
+        delete st.once;
+
         gsap.fromTo(el, {
             rotationX: opts.rotationX != null ? opts.rotationX : 45,
             scale: opts.scale != null ? opts.scale : 0.8,
@@ -412,25 +375,18 @@
             autoAlpha: 1,
             transformPerspective: 1000,
             ease: o.ease,
-            scrollTrigger: {
-                trigger: (opts.scrollTrigger && opts.scrollTrigger.trigger) || el,
-                start: config.scrollStart || 'top 85%',
-                end: opts.end || 'top 20%',
-                scrub: opts.scrub != null ? opts.scrub : 0.6,
-            },
+            scrollTrigger: st,
         });
     }
 
     function typeWriter(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'typeWriter', opts);
+        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'chars' });
         gsap.set(split.chars, { autoAlpha: 0 });
-
-        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
-        var entry = { el: el, split: split, tween: null, effectFn: typeWriter, opts: opts };
 
         var tweenVars = {
             autoAlpha: 1,
@@ -443,7 +399,6 @@
         if (isOneShot) {
             tweenVars.onComplete = function () {
                 split.revert();
-                unregisterSplit(entry);
             };
         }
 
@@ -451,8 +406,7 @@
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
 
-        entry.tween = gsap.to(split.chars, tweenVars);
-        registerSplit(entry);
+        gsap.to(split.chars, tweenVars);
     }
 
     function drawSVG(el, opts) {
@@ -476,15 +430,15 @@
         // Scrub mode: SVG draws as user scrolls (class fx-scrub-[0.6] or opts.scrub)
         var scrubVal = getClassModifier(el, 'scrub', opts.scrub != null ? opts.scrub : null);
         if (scrubVal !== null) {
+            var st = buildScrollTrigger(el, opts.scrollTrigger || {});
+            st.end = opts.end || 'top 20%';
+            st.scrub = scrubVal === true || scrubVal === 'true' ? true : scrubVal;
+            delete st.once;
+
             gsap.to(paths, {
                 strokeDashoffset: 0,
                 ease: o.ease,
-                scrollTrigger: {
-                    trigger: (opts.scrollTrigger && opts.scrollTrigger.trigger) || el,
-                    start: config.scrollStart || 'top 85%',
-                    end: opts.end || 'top 20%',
-                    scrub: scrubVal === true || scrubVal === 'true' ? true : scrubVal,
-                },
+                scrollTrigger: st,
             });
             return;
         }
@@ -508,29 +462,27 @@
         // Read y from modifier class fx-y-[80] or opts or default 50
         var yShift = getClassModifier(el, 'y', opts.y != null ? opts.y : 50);
 
+        var st = buildScrollTrigger(el, opts.scrollTrigger || {});
+        st.end = opts.end || 'bottom top';
+        st.scrub = opts.scrub != null ? opts.scrub : true;
+        delete st.once;
+
         gsap.fromTo(el, {
             y: -yShift,
         }, {
             y: yShift,
             ease: 'none',
-            scrollTrigger: {
-                trigger: (opts.scrollTrigger && opts.scrollTrigger.trigger) || el,
-                start: config.scrollStart || 'top 85%',
-                end: opts.end || 'bottom top',
-                scrub: opts.scrub != null ? opts.scrub : true,
-            },
+            scrollTrigger: st,
         });
     }
 
     function splitWords(el, opts) {
         opts = opts || {};
         var o = resolveOptions(el, 'splitWords', opts);
+        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
 
         gsap.set(el, { visibility: 'inherit' });
         var split = new SplitText(el, { type: 'words' });
-
-        var isOneShot = !(opts.trigger === 'scroll' || opts.scrollTrigger) || config.scrollOnce;
-        var entry = { el: el, split: split, tween: null, effectFn: splitWords, opts: opts };
 
         var tweenVars = {
             y: opts.y != null ? opts.y : 30,
@@ -544,7 +496,6 @@
         if (isOneShot) {
             tweenVars.onComplete = function () {
                 split.revert();
-                unregisterSplit(entry);
             };
         }
 
@@ -552,8 +503,7 @@
             tweenVars.scrollTrigger = buildScrollTrigger(el, opts.scrollTrigger || {});
         }
 
-        entry.tween = gsap.from(split.words, tweenVars);
-        registerSplit(entry);
+        gsap.from(split.words, tweenVars);
     }
 
     function slideIn(el, opts) {
@@ -650,7 +600,6 @@
     // ── Init ────────────────────────────────────
 
     function init() {
-        var processed = new Set();
 
         Object.keys(effects).forEach(function (name) {
             var fn = effects[name];
@@ -660,8 +609,9 @@
             plGroups.forEach(function (group) {
                 group = group.filter(function (el) { return !isExcluded(el); });
                 group.forEach(function (el, i) {
+                    if (_animated.has(el)) return;
                     fn(el, { delay: i * 0.15 });
-                    processed.add(el);
+                    _animated.add(el);
                 });
             });
 
@@ -673,12 +623,13 @@
             stGroups.forEach(function (group) {
                 group = group.filter(function (el) { return !isExcluded(el); });
                 group.forEach(function (el, i) {
+                    if (_animated.has(el)) return;
                     fn(el, {
                         trigger: 'scroll',
                         delay: i * 0.15,
                         scrollTrigger: { trigger: el },
                     });
-                    processed.add(el);
+                    _animated.add(el);
                 });
             });
 
@@ -688,18 +639,19 @@
             if (config.sectionSelector) {
                 document.querySelectorAll(config.sectionSelector).forEach(function (section) {
                     var bareEls = Array.from(section.querySelectorAll('.' + name))
-                        .filter(function (el) { return !processed.has(el) && !isExcluded(el); });
+                        .filter(function (el) { return !_animated.has(el) && !isExcluded(el); });
                     if (bareEls.length === 0) return;
 
                     var groups = groupByParent(bareEls);
                     groups.forEach(function (group) {
                         group.forEach(function (el, i) {
+                            if (_animated.has(el)) return;
                             fn(el, {
                                 trigger: 'scroll',
                                 delay: i * 0.15,
                                 scrollTrigger: { trigger: el },
                             });
-                            processed.add(el);
+                            _animated.add(el);
                         });
                     });
                 });
@@ -708,21 +660,21 @@
 
         // 4. Scrub-based effects — always scroll-linked, processed before tagMap.
         document.querySelectorAll('.fx-tilt-in-st, .fx-tilt-in-pl, .fx-tilt-in').forEach(function (el) {
-            if (!processed.has(el) && !isExcluded(el)) {
+            if (!_animated.has(el) && !isExcluded(el)) {
                 tiltIn(el);
-                processed.add(el);
+                _animated.add(el);
             }
         });
         document.querySelectorAll('.fx-parallax-st, .fx-parallax-pl, .fx-parallax').forEach(function (el) {
-            if (!processed.has(el) && !isExcluded(el)) {
+            if (!_animated.has(el) && !isExcluded(el)) {
                 parallax(el);
-                processed.add(el);
+                _animated.add(el);
             }
         });
         document.querySelectorAll('.fx-draw-svg-scrub').forEach(function (el) {
-            if (!processed.has(el) && !isExcluded(el)) {
+            if (!_animated.has(el) && !isExcluded(el)) {
                 drawSVG(el, { scrub: getClassModifier(el, 'scrub', 0.6) });
-                processed.add(el);
+                _animated.add(el);
             }
         });
 
@@ -735,18 +687,19 @@
                     if (!fn) return;
 
                     var els = Array.from(section.querySelectorAll(selector))
-                        .filter(function (el) { return !processed.has(el) && !isExcluded(el); });
+                        .filter(function (el) { return !_animated.has(el) && !isExcluded(el); });
                     if (els.length === 0) return;
 
                     var groups = groupByParent(els);
                     groups.forEach(function (group) {
                         applyScrollGroup(fn, group, section);
-                        group.forEach(function (el) { processed.add(el); });
+                        group.forEach(function (el) { _animated.add(el); });
                     });
                 });
             });
         }
-        // 5. fx-stagger-all-[selector] — target children, effect from sibling class
+
+        // 6. fx-stagger-all-[selector] — target children, effect from sibling class
         //    Requires an effect class on the same element (e.g. fx-reveal-st).
         document.querySelectorAll('[class*="fx-stagger-all-"]').forEach(function (container) {
             // Parse selector from fx-stagger-all-[img,p]
@@ -776,7 +729,7 @@
             var isScroll = container.classList.contains(effectName + '-st') ||
                            container.classList.contains(effectName);
             var children = Array.from(container.querySelectorAll(childSelector))
-                .filter(function (el) { return !processed.has(el); });
+                .filter(function (el) { return !_animated.has(el); });
             if (children.length === 0) return;
 
             children.forEach(function (child, i) {
@@ -786,7 +739,7 @@
                     opts.scrollTrigger = { trigger: child };
                 }
                 effectFn(child, opts);
-                processed.add(child);
+                _animated.add(child);
             });
         });
 
@@ -811,22 +764,20 @@
     function boot() {
         applyPreConfig();
 
-        // Skip animations if OS reduced motion is enabled
-        if (config.respectReducedMotion && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
+        // Build media query from config — animations auto-revert when conditions stop matching
+        var parts = [];
+        if (config.disableMobile) {
+            parts.push('(min-width: ' + (config.mobileBreakpoint + 1) + 'px)');
         }
-
-        // Skip animations on mobile
-        if (config.disableMobile && window.innerWidth <= config.mobileBreakpoint) {
-            return;
+        if (config.respectReducedMotion) {
+            parts.push('(prefers-reduced-motion: no-preference)');
         }
+        var conditions = parts.length > 0 ? parts.join(' and ') : 'all';
 
-        // Wait for fonts so SplitText measures correct line breaks
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(function () { init(); });
-        } else {
+        _mm.add(conditions, function () {
+            _animated = new WeakSet();
             init();
-        }
+        });
     }
 
     if (document.readyState === 'loading') {
@@ -855,6 +806,6 @@
         splitWords: splitWords,
         slideIn: slideIn,
         init: init,
-        refresh: refreshSplits,
+        refresh: function () { ScrollTrigger.refresh(); },
     };
 })();

@@ -63,13 +63,16 @@ A class-driven GSAP animation wrapper for WordPress and static sites. Users add 
 Set `window.__FX_CONFIG__` before the FX script loads to configure all options without needing JS after load.
 
 ### Resize handling
-Text-based effects (`textReveal`, `typeWriter`, `splitWords`) track their SplitText instances in a `_splitRegistry`. On browser width change (debounced 200ms), pending animations are reverted and re-created with correct line breaks. One-shot animations revert SplitText on completion so text reflows naturally. `FX.refresh()` triggers this manually.
+`textReveal` uses `SplitText.create()` with `autoSplit: true` and `mask: 'lines'` — GSAP's ResizeObserver handles re-splitting on resize and font load automatically. The `onSplit` callback returns the tween so GSAP auto-kills it on re-split. One-shot animations call `self.revert()` on completion which deactivates autoSplit. `typeWriter` and `splitWords` use standard `new SplitText()` (chars/words don't change on resize) and revert on one-shot completion. `FX.refresh()` calls `ScrollTrigger.refresh()`.
+
+### Responsive and reduced motion
+`gsap.matchMedia()` wraps `init()` — animations auto-revert when `disableMobile` or `respectReducedMotion` conditions stop matching, and re-initialize when they match again.
 
 ### Auto-stagger
 Elements with the same `.fx-*` class grouped under the same parent are staggered automatically (0.15s gap).
 
 ### Processing priority
-init() uses a `processed` Set to avoid double-animating:
+init() uses a persistent `_animated` WeakSet to avoid double-animating (reset when matchMedia conditions cycle):
 1. `-pl` classes (page load)
 2. `-st` classes (scroll trigger — element triggers itself)
 3. Bare classes in sections (element triggers itself, section only scopes)

@@ -68,6 +68,14 @@ Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the
 
 == Changelog ==
 
+= 1.8.0 =
+* Refactor: textReveal uses native SplitText `autoSplit`, `mask: "lines"`, and `onSplit` — removes manual overflow wrappers and resize handler
+* Refactor: Responsive and reduced-motion handling via `gsap.matchMedia()` — animations auto-revert when conditions change
+* Refactor: Idempotent `init()` using persistent WeakSet — safe to call multiple times without double-animating
+* Refactor: Scrub effects (tiltIn, parallax, drawSVG scrub) routed through `buildScrollTrigger()` — now support debug markers and `fx-start-[...]` overrides
+* Removed: Manual resize listener, `_splitRegistry`, `document.fonts.ready` blocking — all handled natively by GSAP
+* Enhancement: `FX.refresh()` simplified to `ScrollTrigger.refresh()`
+
 = 1.7.1 =
 * Fix: FOUC prevention — all effects now use autoAlpha instead of opacity, elements start with visibility:hidden and are revealed by GSAP
 * New: WordPress plugin injects visibility:hidden CSS automatically in the head

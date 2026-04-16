@@ -47,7 +47,7 @@ const EASE_OPTIONS = [
 
 const STORAGE_KEY = 'fancoolo-fx-clipboard';
 
-function CopyPasteButtons( { parsed, onPaste } ) {
+function CopyPasteButtons( { parsed, onPaste, onClear } ) {
 	const [ copied, setCopied ] = useState( false );
 	const hasClipboard = !! localStorage.getItem( STORAGE_KEY );
 
@@ -80,7 +80,7 @@ function CopyPasteButtons( { parsed, onPaste } ) {
 	}
 
 	return (
-		<div style={ { display: 'flex', gap: '8px', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e0e0e0' } }>
+		<div style={ { display: 'flex', gap: '8px', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e0e0e0', flexWrap: 'wrap' } }>
 			{ hasEffect && (
 				<Button
 					variant="secondary"
@@ -97,6 +97,16 @@ function CopyPasteButtons( { parsed, onPaste } ) {
 					style={ { flex: 1, justifyContent: 'center' } }
 				>
 					{ __( 'Paste FX', 'fancoolo-fx' ) }
+				</Button>
+			) }
+			{ hasEffect && onClear && (
+				<Button
+					isDestructive
+					variant="secondary"
+					onClick={ onClear }
+					style={ { flex: 1, justifyContent: 'center' } }
+				>
+					{ __( 'Clear FX', 'fancoolo-fx' ) }
 				</Button>
 			) }
 		</div>
@@ -257,6 +267,9 @@ const withFxPanel = createHigherOrderComponent( ( BlockEdit ) => {
 								const newClassName = generateFxClasses( { ...data, otherClasses } );
 								setAttributes( { className: newClassName || undefined } );
 							} }
+							onClear={ () => {
+								setAttributes( { className: otherClasses || undefined } );
+							} }
 						/>
 					</PanelBody>
 				</InspectorControls>
@@ -292,6 +305,16 @@ const withFxPanel = createHigherOrderComponent( ( BlockEdit ) => {
 									} }
 								>
 									{ __( 'Paste FX animation', 'fancoolo-fx' ) }
+								</MenuItem>
+							) }
+							{ hasEffect && (
+								<MenuItem
+									onClick={ () => {
+										setAttributes( { className: otherClasses || undefined } );
+										onClose();
+									} }
+								>
+									{ __( 'Clear FX animation', 'fancoolo-fx' ) }
 								</MenuItem>
 							) }
 							<hr style={ { margin: '6px 0', borderTop: '1px solid #e0e0e0', borderBottom: 'none' } } />
