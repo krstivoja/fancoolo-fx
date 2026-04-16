@@ -68,6 +68,9 @@ Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the
 
 == Changelog ==
 
+= 1.8.2 =
+* Fix: textReveal now detects containers with block-level children (divs, sections, forms) and only splits text-bearing elements (h1-h6, p, blockquote, etc.) — prevents breakage of interactive widgets like accordions, tabs, and sliders
+
 = 1.8.1 =
 * Fix: Removed split.revert() calls from textReveal, typeWriter, and splitWords — revert destroys JS state (event listeners, injected DOM) added after SplitText ran
 * Fix: textReveal resize re-splitting fully handled by autoSplit, no manual revert needed
