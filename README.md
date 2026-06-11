@@ -34,18 +34,30 @@ The heading animates with a masked line-reveal on page load.
 
 ## Available Effects
 
-| Effect | Page Load | Scroll Trigger | Description |
-|--------|-----------|----------------|-------------|
-| Text Reveal | `.fx-text-reveal-pl` | `.fx-text-reveal-st` | Split lines, mask, slide up |
-| Reveal | `.fx-reveal-pl` | `.fx-reveal-st` | Slide up + fade |
-| Spin Reveal | `.fx-spin-reveal-pl` | `.fx-spin-reveal-st` | Rotate + scale in |
-| BG Reveal | `.fx-bg-reveal-pl` | `.fx-bg-reveal-st` | Background slide up |
-| Scale In | `.fx-scale-in-pl` | `.fx-scale-in-st` | Scale up + fade |
+| Effect | Class | Description |
+|--------|-------|-------------|
+| Text Reveal | `fx-text-reveal` | Split into lines, masked slide-up |
+| Reveal | `fx-reveal` | Slide up from below + fade |
+| Spin Reveal | `fx-spin-reveal` | Rotate + scale in + fade |
+| BG Reveal | `fx-bg-reveal` | Slide up from `y:100%` + fade |
+| Scale In | `fx-scale-in` | Scale from 0.92 + fade |
+| Fade In | `fx-fade-in` | Opacity + subtle scale, no movement |
+| Blur In | `fx-blur-in` | Fade + deblur (camera-focus effect) |
+| Clip Up | `fx-clip-up` | Clip-path wipe from bottom |
+| Clip Down | `fx-clip-down` | Clip-path wipe from top |
+| Tilt In | `fx-tilt-in` | 3D perspective reveal (**scrub-based**) |
+| Type Writer | `fx-type-writer` | Characters revealed one by one |
+| Draw SVG | `fx-draw-svg` | Stroke draw-on for SVG paths (`fx-draw-svg-scrub` for scroll-scrubbed) |
+| Parallax | `fx-parallax` | **Scrub-based** Y-shift on scroll |
+| Split Words | `fx-split-words` | Words staggered fade + slide-up |
+| Slide In | `fx-slide-left` / `fx-slide-right` | Horizontal slide in |
 
-**Three trigger modes:**
-- `-pl` — **Page load**: animates when the DOM is ready
-- `-st` — **Scroll trigger**: animates when the element enters the viewport
-- **No suffix** — **Section trigger**: bare `.fx-text-reveal` inside a `<section>` is auto scroll-triggered using the section as the trigger
+**Three trigger modes** (append to any class above):
+- `-pl` — **Page load**: animates when the DOM is ready (e.g. `fx-reveal-pl`)
+- `-st` — **Scroll trigger**: animates when the element enters the viewport (e.g. `fx-reveal-st`)
+- **No suffix** — **Section trigger**: a bare `fx-reveal` inside a `<section>` is auto scroll-triggered, using the section to scope which elements are picked up
+
+`fx-tilt-in` and `fx-parallax` are scrub-based — tied directly to scroll position rather than playing once on enter.
 
 ## How Scroll Triggering Works
 
@@ -124,6 +136,9 @@ Override timing per-element using modifier classes (Gutenberg-friendly — no in
 | `fx-delay-[n]` | `0` | Start delay in seconds |
 | `fx-stagger-[n]` | `0.1` | Delay between staggered items |
 | `fx-ease-[name]` | `power3.out` | GSAP easing function |
+| `fx-start-[pos]` | `top 85%` | ScrollTrigger start position |
+| `fx-scrub-[n]` | `0.6` | Scrub amount for scrub effects (`fx-draw-svg-scrub`, `fx-tilt-in`, `fx-parallax`) |
+| `fx-y-[n]` | `50` | Parallax shift distance in pixels |
 
 ```html
 <h2 class="fx-text-reveal-st fx-duration-[2] fx-stagger-[0.25]">
@@ -156,6 +171,16 @@ All functions accept `(element, options)`:
 | `spinReveal(el, opts)` | `rotation` (default -30), `scale` (default 0.9), `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
 | `bgReveal(el, opts)` | `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
 | `scaleIn(el, opts)` | `scale` (default 0.92), `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
+| `fadeIn(el, opts)` | `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
+| `blurIn(el, opts)` | `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
+| `clipUp(el, opts)` | `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
+| `clipDown(el, opts)` | `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
+| `tiltIn(el, opts)` | `duration`, `ease`, `scrub`, `scrollTrigger` (scrub-based) |
+| `typeWriter(el, opts)` | `duration`, `ease`, `stagger`, `delay`, `trigger`, `scrollTrigger` |
+| `drawSVG(el, opts)` | `duration`, `ease`, `delay`, `scrub`, `end`, `trigger`, `scrollTrigger` |
+| `parallax(el, opts)` | `y` (default 50), `scrub`, `end`, `scrollTrigger` (scrub-based) |
+| `splitWords(el, opts)` | `y` (default 30), `duration`, `ease`, `stagger`, `delay`, `trigger`, `scrollTrigger` |
+| `slideIn(el, opts)` | `x` (default 100), `direction` (`'left'`/`'right'`), `duration`, `ease`, `delay`, `trigger`, `scrollTrigger` |
 
 Set `trigger: 'scroll'` to enable ScrollTrigger. Pass `scrollTrigger: { trigger: someEl }` to use a different trigger element.
 

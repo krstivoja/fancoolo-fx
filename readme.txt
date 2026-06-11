@@ -20,13 +20,23 @@ Fancoolo FX wraps GSAP, ScrollTrigger, and SplitText into a simple class-based a
 3. Add a class like `fx-text-reveal-st` in the "Additional CSS classes" field
 4. The block animates on scroll
 
-**5 Built-in Effects:**
+**15 Built-in Effects:**
 
 * **Text Reveal** (`fx-text-reveal`) — Split text into lines with masked reveal
 * **Reveal** (`fx-reveal`) — Slide up with fade
 * **Spin Reveal** (`fx-spin-reveal`) — Rotate and scale in
 * **BG Reveal** (`fx-bg-reveal`) — Background slide up
 * **Scale In** (`fx-scale-in`) — Scale up with fade
+* **Fade In** (`fx-fade-in`) — Opacity with subtle scale, no movement
+* **Blur In** (`fx-blur-in`) — Fade with deblur (camera-focus effect)
+* **Clip Up** (`fx-clip-up`) — Clip-path wipe from bottom
+* **Clip Down** (`fx-clip-down`) — Clip-path wipe from top
+* **Tilt In** (`fx-tilt-in`) — 3D perspective reveal (scrub-based)
+* **Type Writer** (`fx-type-writer`) — Characters revealed one by one
+* **Draw SVG** (`fx-draw-svg`) — Stroke draw-on for SVG paths
+* **Parallax** (`fx-parallax`) — Scrub-based Y-shift on scroll
+* **Split Words** (`fx-split-words`) — Words staggered fade and slide up
+* **Slide In** (`fx-slide-left` / `fx-slide-right`) — Horizontal slide in
 
 **Trigger Modes:**
 
