@@ -134,6 +134,10 @@ That's it — the tag push triggers `.github/workflows/release.yml`, which build
 - Push a version tag (e.g. `1.4.0`) → Actions workflow zips plugin files from root → attaches to release
 - Can also build locally: `wp dist-archive .` (uses `.distignore`)
 
+### Readme
+- `README.md` is the single readme — renders on npm + GitHub and ships inside the WP plugin zip. There is intentionally no `readme.txt` (the plugin isn't on wordpress.org; the DPlugins updater reads release info from remote JSON, not `readme.txt`).
+- **If listing on wordpress.org later:** generate `readme.txt` at release time instead of hand-maintaining it. README.md lacks the required wp.org header (`=== … ===`, Contributors/Tags/Tested up to/Stable tag, `== Sections ==`, `= x.y.z =` changelog), so a plain md→txt dump is invalid. Keep a checked-in `readme.header.txt` (the metadata block) and have a release script concatenate it with sections derived from `README.md` + `CHANGELOG.md`.
+
 ### GitHub Pages
 - Auto-deploys from `docs/` folder
 
