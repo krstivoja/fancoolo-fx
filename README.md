@@ -246,22 +246,22 @@ wp dist-archive .
 
 This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `readme.txt`, `assets/`). Upload it via **Plugins → Add New → Upload** in WordPress.
 
-## Publishing to npm
+## Releasing
 
-```bash
-# Set token once (stored in ~/.npmrc)
-npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
+Publishing is automated. Pushing a version tag triggers the GitHub Actions
+workflow (`.github/workflows/release.yml`), which builds the WordPress plugin
+zip **and** publishes to npm (`npm publish --provenance`, authed by the
+`NPM_TOKEN` repo secret). **Do not run `npm publish` manually.**
 
-# Publish from the project root
-npm publish
-```
+Only `src/fx.js`, `package.json`, and `README.md` are published to npm
+(controlled by `.npmignore`).
 
-Only `src/fx.js`, `package.json`, and `README.md` are published (controlled by `.npmignore`).
+### Release checklist
 
-## Release Checklist
-
-1. Bump version in `package.json` and `fancoolo-fx.php`
+1. Bump the version in `package.json`, `fancoolo-fx.php`, and `readme.txt` (`Stable tag`)
 2. Run `npm run sync` to copy `src/fx.js` to `assets/` and `docs/vendor/`
-3. Commit and push to main
-4. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z` (triggers GitHub Release with plugin zip)
-5. Publish to npm: `npm publish`
+3. Add changelog entries to `CHANGELOG.md` and `readme.txt`
+4. Commit and push to `main`
+5. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
+
+The tag push does the rest — GitHub Release zip + npm publish.
