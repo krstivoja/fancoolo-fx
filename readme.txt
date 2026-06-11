@@ -4,7 +4,7 @@ Tags: animation, gsap, scroll, gutenberg, blocks
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.8.5
 License: ISC
 
 A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations.
@@ -67,6 +67,12 @@ Yes. The plugin loads GSAP and the animation wrapper on the frontend regardless 
 Yes. Use the `fx-start-[top center]` modifier class, or set `scrollStart` in the custom JavaScript editor.
 
 == Changelog ==
+
+= 1.8.5 =
+* Fix: TranslatePress conflict on the frontend — textReveal, typeWriter, and splitWords now set data-no-dynamic-translation on elements before splitting, so TranslatePress's dynamic DOM-change translator stops racing SplitText. Prevents headings flickering or sticking in the source language on translated pages
+
+= 1.8.4 =
+* Fix: FX now stands down inside the TranslatePress translation editor (detected via the trp-edit-translation query arg) — blocks stay un-split, visible, and selectable so they can be translated. Also skips the FOUC visibility:hidden CSS and the GSAP/fx.js enqueue in that context
 
 = 1.8.2 =
 * Fix: textReveal now detects containers with block-level children (divs, sections, forms) and only splits text-bearing elements (h1-h6, p, blockquote, etc.) — prevents breakage of interactive widgets like accordions, tabs, and sliders

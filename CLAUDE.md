@@ -116,20 +116,20 @@ init() uses a persistent `_animated` WeakSet to avoid double-animating (reset wh
 ## Publishing
 
 ### Release checklist
-1. Bump version in both `package.json` and `fancoolo-fx.php`
+1. Bump version in both `package.json` and `fancoolo-fx.php` (and `Stable tag` in `readme.txt`)
 2. Run `npm run sync` to copy `src/fx.js` → `assets/fx.js` + `docs/vendor/fx.js`
-3. Commit and push to main
-4. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
-5. Publish to npm: `npm publish`
+3. Add changelog entries to **both** `CHANGELOG.md` and `readme.txt` (`== Changelog ==` section)
+4. Commit and push to main
+5. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
 
-### npm (package: fancoolo-fx)
-```bash
-npm config set //registry.npmjs.org/:_authToken=YOUR_TOKEN
-npm publish
-```
-- Token is stored globally in `~/.npmrc` — set once, reuse across publishes
-- Never commit tokens to the repo or share them in chat
-- Publishes only `src/fx.js`, `package.json`, `README.md` (controlled by `.npmignore`)
+That's it — the tag push triggers `.github/workflows/release.yml`, which builds the WP plugin zip **and** publishes to npm automatically. **Do not run `npm publish` manually.**
+
+### npm (package: fancoolo-fx) — automated via GitHub Actions
+- The `publish-npm` job in `release.yml` runs `npm publish --provenance --access public` on every version-tag push, authed by the `NPM_TOKEN` repo secret.
+- Publishes only `src/fx.js`, `package.json`, `README.md` (controlled by `.npmignore`).
+- **`NPM_TOKEN` secret** must be a **Read and write** token scoped to the `fancoolo-fx` package (granular) or a Classic Automation token. A read-only or wrong-scoped token makes `npm publish` fail with a misleading `E404`. Update at github.com/krstivoja/fancoolo-fx/settings/secrets/actions, then re-run the failed job: `gh run rerun <run-id> --failed`.
+- The current granular token expires ~2026-09-09 — rotate before then or CI publishes will fail.
+- Never commit tokens to the repo or share them in chat.
 
 ### GitHub Release (WP plugin zip)
 - Push a version tag (e.g. `1.4.0`) → Actions workflow zips plugin files from root → attaches to release
@@ -165,4 +165,4 @@ No bundler, no compilation. GSAP + plugins are loaded as separate script tags fr
 5. Add to `window.FX`
 6. Run `npm run sync` to copy fx.js to `assets/fx.js` and `docs/vendor/fx.js`
 7. Update: effects.md, skills/SKILL.md, WP plugin classes/API tables
-8. Bump version in package.json + fancoolo-fx.php, tag, push, npm publish
+8. Follow the Release checklist (bump versions, update changelogs, commit, tag, push — npm publish is automated by the tag)

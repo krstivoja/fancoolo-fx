@@ -1,7 +1,13 @@
 # Fancoolo FX — Changelog
 
-## 1.8.3
+## 1.8.5
 _(current release)_
+- **Fix:** TranslatePress conflict on the front-end — `textReveal`, `typeWriter`, and `splitWords` now stamp `data-no-dynamic-translation` on elements before splitting, so TranslatePress's dynamic DOM-change translator stops racing SplitText. Prevents headings flickering or sticking in the source language on translated pages
+
+## 1.8.4
+- **Fix:** FX now stands down inside the TranslatePress translation editor (detected via the `trp-edit-translation` query arg) — blocks stay un-split, visible, and selectable so they can be translated. Also skips the FOUC `visibility:hidden` CSS and the GSAP/fx.js enqueue in that context
+
+## 1.8.3
 
 ## 1.8.2
 - **Fix:** `textReveal` now detects containers with block-level children (divs, sections, forms) and only splits text-bearing elements (h1–h6, p, blockquote, etc.) — prevents breakage of interactive widgets like accordions, tabs, and sliders
