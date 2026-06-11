@@ -774,7 +774,22 @@
         if (pre.excludeSelectors !== undefined) config.excludeSelectors = pre.excludeSelectors;
     }
 
+    // Detect the TranslatePress translation editor. It loads the page inside an
+    // iframe with a `trp-edit-translation` URL param. FX must stand down there:
+    // SplitText fragments text into spans (the real string survives only in
+    // aria-label), and its autoSplit ResizeObserver fights TranslatePress's DOM
+    // rewriting — producing an endless re-split flicker and untranslatable blocks.
+    function isTranslationEditor() {
+        try {
+            return /[?&]trp-edit-translation=/.test(window.location.search);
+        } catch (e) {
+            return false;
+        }
+    }
+
     function boot() {
+        if (isTranslationEditor()) return;
+
         applyPreConfig();
 
         // Build media query from config — animations auto-revert when conditions stop matching

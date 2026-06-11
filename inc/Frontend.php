@@ -8,7 +8,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Frontend {
 
+	/**
+	 * The TranslatePress editor loads the page inside an iframe with a
+	 * `trp-edit-translation` query arg. FX must stand down there: the FOUC CSS
+	 * hides blocks (making them unselectable) and SplitText fragments text so
+	 * TranslatePress can't find the original string to translate.
+	 */
+	private static function is_translation_editor() {
+		return isset( $_GET['trp-edit-translation'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+
 	public static function inline_css() {
+		if ( self::is_translation_editor() ) {
+			return;
+		}
 		?>
 		<style>
 		.fx-text-reveal-pl,.fx-text-reveal-st,.fx-text-reveal,
@@ -31,6 +44,9 @@ class Frontend {
 	}
 
 	public static function enqueue() {
+		if ( self::is_translation_editor() ) {
+			return;
+		}
 		wp_enqueue_script( 'gsap', FANCOOLO_FX_URL . 'assets/gsap.min.js', array(), '3.14.2', true );
 		wp_enqueue_script( 'gsap-scrolltrigger', FANCOOLO_FX_URL . 'assets/ScrollTrigger.min.js', array( 'gsap' ), '3.14.2', true );
 		wp_enqueue_script( 'gsap-splittext', FANCOOLO_FX_URL . 'assets/SplitText.min.js', array( 'gsap' ), '3.14.2', true );
