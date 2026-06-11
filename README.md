@@ -242,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ```
 ├── fancoolo-fx.php             ← WordPress plugin
-├── readme.txt                  ← WP plugin readme
 ├── assets/                     ← GSAP + fx.js copies for WP
 ├── src/fx.js                   ← Source of truth (npm package entry)
 ├── package.json                ← npm deps (gsap)
@@ -269,7 +268,7 @@ wp package install wp-cli/dist-archive-command
 wp dist-archive .
 ```
 
-This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `readme.txt`, `assets/`). Upload it via **Plugins → Add New → Upload** in WordPress.
+This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `assets/`, `inc/`, `README.md`). Upload it via **Plugins → Add New → Upload** in WordPress.
 
 ## Releasing
 
@@ -283,9 +282,9 @@ Only `src/fx.js`, `package.json`, and `README.md` are published to npm
 
 ### Release checklist
 
-1. Bump the version in `package.json`, `fancoolo-fx.php`, and `readme.txt` (`Stable tag`)
+1. Bump the version in `package.json` and `fancoolo-fx.php`
 2. Run `npm run sync` to copy `src/fx.js` to `assets/` and `docs/vendor/`
-3. Add changelog entries to `CHANGELOG.md` and `readme.txt`
+3. Add a changelog entry to `CHANGELOG.md`
 4. Commit and push to `main`
 5. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
 

@@ -83,7 +83,6 @@ init() uses a persistent `_animated` WeakSet to avoid double-animating (reset wh
 ## Project structure
 ```
 ├── fancoolo-fx.php                    ← WP plugin bootstrap (root = WP loads it directly)
-├── readme.txt                         ← WP plugin readme
 ├── assets/                            ← GSAP + fx.js copies for WP
 │   ├── gsap.min.js
 │   ├── ScrollTrigger.min.js
@@ -116,9 +115,9 @@ init() uses a persistent `_animated` WeakSet to avoid double-animating (reset wh
 ## Publishing
 
 ### Release checklist
-1. Bump version in both `package.json` and `fancoolo-fx.php` (and `Stable tag` in `readme.txt`)
+1. Bump version in both `package.json` and `fancoolo-fx.php`
 2. Run `npm run sync` to copy `src/fx.js` → `assets/fx.js` + `docs/vendor/fx.js`
-3. Add changelog entries to **both** `CHANGELOG.md` and `readme.txt` (`== Changelog ==` section)
+3. Add a changelog entry to `CHANGELOG.md`
 4. Commit and push to main
 5. Tag and push: `git tag X.Y.Z && git push origin X.Y.Z`
 
