@@ -5,7 +5,7 @@
  * Description:       A class-driven GSAP animation wrapper. Add CSS classes in Gutenberg and get animations — no JavaScript needed.
  * Requires at least: 6.3.0
  * Requires PHP:      7.4
- * Version:           1.8.4
+ * Version:           1.8.5
  * Author:            DPlugins
  * Author URI:        https://dplugins.com/
  * License:           GPL-2.0-or-later

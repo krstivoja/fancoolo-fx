@@ -164,7 +164,22 @@
 
     // ── Effects ──────────────────────────────────
 
+    // Exclude an element from TranslatePress's dynamic (DOM-change) re-translation.
+    // SplitText restructures text into line/word/char spans; TranslatePress's
+    // MutationObserver (trp-translate-dom-changes.js) sees those mutations and
+    // re-translates the fragments, racing with SplitText and flickering the text
+    // between languages. The server already renders the translated text, so the
+    // dynamic pass is redundant here. `data-no-dynamic-translation` is in
+    // TranslatePress's own skip-selector list; it's an inert data attribute when
+    // TranslatePress isn't present.
+    function markNoDynamicTranslation(el) {
+        if (el && el.setAttribute) {
+            el.setAttribute('data-no-dynamic-translation', '');
+        }
+    }
+
     function splitTextReveal(target, o, isScroll, triggerEl, opts) {
+        markNoDynamicTranslation(target);
         SplitText.create(target, {
             type: 'lines',
             mask: 'lines',
@@ -411,6 +426,7 @@
         var o = resolveOptions(el, 'typeWriter', opts);
 
         gsap.set(el, { visibility: 'inherit' });
+        markNoDynamicTranslation(el);
         var split = new SplitText(el, { type: 'chars' });
         gsap.set(split.chars, { autoAlpha: 0 });
 
@@ -501,6 +517,7 @@
         var o = resolveOptions(el, 'splitWords', opts);
 
         gsap.set(el, { visibility: 'inherit' });
+        markNoDynamicTranslation(el);
         var split = new SplitText(el, { type: 'words' });
 
         var tweenVars = {
