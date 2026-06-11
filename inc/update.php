@@ -63,7 +63,7 @@ if (!class_exists('FANCOOLOFX_DPUpdateChecker')) {
 
         
         public function info($res, $action, $args) {
-            if ('plugin_information' !== $action || $this->slug !== $args->slug) {
+            if ('plugin_information' !== $action || dirname($this->slug) !== $args->slug) {
                 return $res;
             }
 
@@ -107,7 +107,7 @@ if (!class_exists('FANCOOLOFX_DPUpdateChecker')) {
                 && version_compare($remote->requires_php, PHP_VERSION, '<=')
             ) {
                 $res = new stdClass();
-                $res->slug = $this->slug;
+                $res->slug = dirname($this->slug);
                 $res->new_version = $remote->version;
                 $res->tested = $remote->tested;
                 $res->package = $remote->download_url;
@@ -118,6 +118,19 @@ if (!class_exists('FANCOOLOFX_DPUpdateChecker')) {
 
                 $res->plugin = $this->slug;
                 $transient->response[$res->plugin] = $res;
+            } else {
+                $res = new stdClass();
+                $res->slug = dirname($this->slug);
+                $res->new_version = $this->version;
+                $res->tested = isset($remote->tested) ? $remote->tested : '';
+                $res->package = '';
+
+                if (!empty($remote->icons)) {
+                    $res->icons = (array)$remote->icons;
+                }
+
+                $res->plugin = $this->slug;
+                $transient->no_update[$res->plugin] = $res;
             }
 
             return $transient;
