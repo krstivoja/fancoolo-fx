@@ -6,7 +6,7 @@ Fancoolo FX ships with a Claude Code skill so the AI assistant understands how t
 
 When installed, Claude Code will automatically:
 
-- Know all 5 effects and their class names
+- Know all 15 effects and their class names
 - Understand trigger modes (`-pl`, `-st`, bare classes)
 - Suggest correct modifier classes (`fx-duration-[n]`, etc.)
 - Generate proper `FX.config` and `__FX_CONFIG__` code
@@ -46,7 +46,7 @@ The skill file (`skills/SKILL.md`) contains:
 
 | Section | What Claude Learns |
 |---------|-------------------|
-| Effects table | All 5 effects, their classes, JS functions, defaults |
+| Effects table | All 15 effects, their classes, JS functions, defaults |
 | Trigger modes | `-pl`, `-st`, bare classes, and tagMap |
 | Modifier classes | `fx-duration-[n]`, `fx-delay-[n]`, `fx-stagger-[n]`, `fx-ease-[name]`, `fx-start-[pos]` |
 | Config options | `sectionSelector`, `scrollStart`, `scrollOnce`, `tagMap` |

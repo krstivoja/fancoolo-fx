@@ -304,3 +304,12 @@ You can also add FX classes to block theme patterns:
 <h2 class="fx-text-reveal-st">Pattern heading</h2>
 <!-- /wp:heading -->
 ```
+
+## Multilingual (TranslatePress)
+
+FX is compatible with [TranslatePress](https://translatepress.com/) out of the box — no configuration needed. The text-splitting effects (`textReveal`, `typeWriter`, `splitWords`) use GSAP's SplitText, which restructures a heading's text into per-line/word/character spans. Without coordination, that fragmentation conflicts with TranslatePress in two places, both of which FX now handles automatically:
+
+- **In the TranslatePress editor**, FX stands down entirely (detected via the `trp-edit-translation` query argument). Blocks stay un-split, visible, and selectable so you can translate them normally. The FOUC `visibility:hidden` CSS and the GSAP/fx.js scripts are also skipped there.
+- **On translated front-end pages**, each split element is marked with `data-no-dynamic-translation` before SplitText runs. That attribute is in TranslatePress's own skip list, so its dynamic DOM-change translator leaves the element alone instead of racing SplitText — which otherwise made headings flicker or stick in the source language. The server-rendered translation stays in place and the animation plays normally.
+
+Both behaviors are inert on sites that don't use TranslatePress.
