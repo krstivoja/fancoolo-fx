@@ -283,12 +283,10 @@ Fancoolo FX uses CSS classes which you can add via the "Additional CSS class(es)
 Use [WP-CLI `dist-archive`](https://developer.wordpress.org/cli/commands/dist-archive/) to build a clean plugin zip. The `.distignore` file controls which files are excluded.
 
 ```bash
-# Install the command (one-time)
-wp package install wp-cli/dist-archive-command
-
-# Build the zip from the project root
-wp dist-archive .
+wp dist-archive "wp-content/plugins/fancoolo-fx/"
 ```
+
+
 
 This produces `fancoolo-fx.1.x.x.zip` containing only the plugin files (`fancoolo-fx.php`, `assets/`, `inc/`, `README.md`). Upload it via **Plugins → Add New → Upload** in WordPress.
 
