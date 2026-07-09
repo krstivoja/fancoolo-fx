@@ -216,7 +216,29 @@ FX uses GSAP's `autoAlpha` internally, so elements with `visibility: hidden` are
 .fx-slide-right-pl,.fx-slide-right-st,.fx-slide-right{visibility:hidden}
 ```
 
-**WordPress:** The plugin injects this CSS automatically in the `<head>` — no action needed.
+**Reduce Motion — required companion rule.** With `respectReducedMotion: true` (the default), FX skips all animations when the OS "reduce motion" setting is on — which means the reveals never run and never lift the `visibility:hidden` above, leaving content **invisible**. Add this after the rule above so the hidden state is lifted when animations won't play (no `!important` — GSAP's inline styles must still win if you set `respectReducedMotion: false`):
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .fx-text-reveal-pl,.fx-text-reveal-st,.fx-text-reveal,
+  .fx-reveal-pl,.fx-reveal-st,.fx-reveal,
+  .fx-spin-reveal-pl,.fx-spin-reveal-st,.fx-spin-reveal,
+  .fx-bg-reveal-pl,.fx-bg-reveal-st,.fx-bg-reveal,
+  .fx-scale-in-pl,.fx-scale-in-st,.fx-scale-in,
+  .fx-fade-in-pl,.fx-fade-in-st,.fx-fade-in,
+  .fx-blur-in-pl,.fx-blur-in-st,.fx-blur-in,
+  .fx-clip-up-pl,.fx-clip-up-st,.fx-clip-up,
+  .fx-clip-down-pl,.fx-clip-down-st,.fx-clip-down,
+  .fx-tilt-in-st,.fx-tilt-in,
+  .fx-type-writer-pl,.fx-type-writer-st,.fx-type-writer,
+  .fx-draw-svg-pl,.fx-draw-svg-st,.fx-draw-svg,.fx-draw-svg-scrub,
+  .fx-split-words-pl,.fx-split-words-st,.fx-split-words,
+  .fx-slide-left-pl,.fx-slide-left-st,.fx-slide-left,
+  .fx-slide-right-pl,.fx-slide-right-st,.fx-slide-right{visibility:visible}
+}
+```
+
+**WordPress:** The plugin injects both rules automatically in the `<head>` — no action needed.
 
 ## Using in a New Project
 

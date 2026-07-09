@@ -1,7 +1,10 @@
 # Fancoolo FX — Changelog
 
-## 1.8.5
+## 1.8.6
 _(current release)_
+- **Fix:** Reduce Motion made the entire site invisible. With `respectReducedMotion: true` (the default), the reveals never run under the OS "reduce motion" setting, so the base `visibility:hidden` was never lifted — every `.fx-*` element stayed hidden. Added a `@media (prefers-reduced-motion: reduce)` companion rule that restores visibility. No `!important`, so GSAP's inline styles still win when `respectReducedMotion: false` and animations do run under reduce.
+
+## 1.8.5
 - **Fix:** TranslatePress conflict on the front-end — `textReveal`, `typeWriter`, and `splitWords` now stamp `data-no-dynamic-translation` on elements before splitting, so TranslatePress's dynamic DOM-change translator stops racing SplitText. Prevents headings flickering or sticking in the source language on translated pages
 
 ## 1.8.4
